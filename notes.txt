@@ -13,7 +13,7 @@ so, can then update GUI and tell arduino what to do next(thru another serial com
 2. python sends code to arduino to move left (updates GUI with left prompt), wait for new code from arduino
 3. arduino sends python code "all done" (update GUI with stop prompt)
 4. python sends another command: "move right" (update GUI with right arrow prompt)
-5. arudino moves motor, then sends to python "all done"
+5. arduino moves motor, then sends to python "all done"
 6. now another python command to arduino
 
 
