@@ -1,30 +1,85 @@
 from tkinter import *
 from PIL import Image, ImageTk
-from ArduinoPython import ArduinoCode
+from tkinter import ttk
+# from ArduinoPython import ArduinoCode
+import customtkinter
+from customtkinter import *
+
+customtkinter.set_appearance_mode("system")  # Modes: system (default), light, dark
+customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
 
 
-class RootWindow:
+class RootWindow():
 
     def __init__(self, master):
-        self.frame = Frame(master)
+
         self.patientWindow = None
+        # left frame
+        self.frame_left = customtkinter.CTkFrame(master)
 
-        button1 = Button(self.frame, text="Open Patient Window", command=self.open)
-        button1.pack(padx=20, pady=20)
+        button1 = customtkinter.CTkButton(self.frame_left, text="Open Patient Window", command=self.open)
+        button1.grid(row=0, column=0, columnspan=2, padx=10, pady=20)
 
-        button2 = Button(self.frame, text="Update Image to Right", command=self.right_arrow)
-        button2.pack(padx=50, pady=20)
+        user_label = customtkinter.CTkLabel(self.frame_left, text='User Number:')
+        user_label.grid(row=1, column=0,)
+        user_entry_var = customtkinter.StringVar()
+        user_entry = customtkinter.CTkEntry(self.frame_left, textvariable=user_entry_var)
+        user_entry.grid(row=1, column=1, padx=10)
 
-        button3 = Button(self.frame, text="Update Image to Left", command=self.left_arrow)
-        button3.pack(padx=50, pady=20)
+        trial_label = customtkinter.CTkLabel(self.frame_left, text='Trial Number:')
+        trial_label.grid(row=2, column=0)
+        trial_entry_var = customtkinter.StringVar()
+        trial_entry = customtkinter.CTkEntry(self.frame_left, textvariable=trial_entry_var)
+        trial_entry.grid(row=2, column=1, padx=10)
 
-        button3 = Button(self.frame, text="Update Image to Stop", command=self.stop_image)
-        button3.pack(padx=50, pady=20)
+        button1 = customtkinter.CTkButton(self.frame_left, text="Submit User/Trial Data", command=self.update_user_data)
+        button1.grid(row=3, column=0, columnspan=2, padx=10, pady=20)
 
-        self.frame.pack(padx=50, pady=20)
+        collect_data_box = customtkinter.CTkCheckBox(self.frame_left, text="Record Data", command=self.record_data)
+        collect_data_box.grid(row=4, column=0, columnspan=2, padx=50, pady=10)
+
+        run_trial_but = customtkinter.CTkButton(self.frame_left, text="Run Trial", command=self.run_trial)
+        run_trial_but.grid(row=5, column=0, columnspan=2, padx=10, pady=20)
+
+        self.frame_left.grid(padx=40, pady=50, row=0, column=0)
+
+        # right frame
+        self.frame_right = customtkinter.CTkFrame(master)
+
+        button2 = customtkinter.CTkButton(self.frame_right, text="Update Image to Right", command=self.right_arrow)
+        button2.grid(padx=50, pady=20, row=0, column=0)
+
+        button3 = customtkinter.CTkButton(self.frame_right, text="Update Image to Left", command=self.left_arrow)
+        button3.grid(padx=50, pady=20, row=1, column=0)
+
+        button3 = customtkinter.CTkButton(self.frame_right, text="Update Image to Stop", command=self.stop_image)
+        button3.grid(padx=50, pady=20, row=2, column=0)
+
+        speed_label = customtkinter.CTkLabel(self.frame_right, text='Speed Setting:')
+        speed_label.grid(row=3, column=0)
+        speed_var = customtkinter.StringVar()
+        speed_slider = customtkinter.CTkComboBox(self.frame_right, values=['Slow', 'Medium', 'Fast'], state='normal', command=self.update_speed)
+        speed_slider.grid(row=4, column=0, pady=(0,20))
+
+        self.frame_right.grid(padx=20, pady=50, row=0, column=1)
 
     def open(self):
         self.patientWindow = PatientWindow()
+
+    def update_user_data(self):
+        # update csv file with user number and trial num
+        # uses .get() with entry text variables
+        pass
+
+    def record_data(self):
+        # update bool value to update "data collection" function that will take some type of data (eeg,emg)
+        pass
+
+    def run_trial(self):
+        pass
+
+    def update_speed(self):
+        pass
 
     def right_arrow(self):
         right_img = Image.open("images/right-arrow.gif")
@@ -50,9 +105,10 @@ class RootWindow:
 
 class PatientWindow:
     def __init__(self):
-        top = Toplevel()
+        top = customtkinter.CTkToplevel()
         top.geometry("600x600")
-        self.frame = Frame(top)
+        top.title("Exoskeleton Patient View")
+        self.frame = customtkinter.CTkFrame(top)
 
         im = Image.open("images/please-wait2.png")
         resized = im.resize((600, 600), Image.Resampling.LANCZOS)
@@ -73,6 +129,8 @@ class PatientWindow:
 
 
 if __name__ == "__main__":
-    root = Tk()
+    root = CTk()
+    root.geometry("690x500")
+    root.title("Exoskeleton Technician Controls")
     main_window = RootWindow(root)
     root.mainloop()
