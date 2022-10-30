@@ -1,9 +1,9 @@
 from tkinter import *
 from PIL import Image, ImageTk
-from tkinter import ttk
 # from ArduinoPython import ArduinoCode
 import customtkinter
 from customtkinter import *
+from turtle import Turtle
 
 customtkinter.set_appearance_mode("system")  # Modes: system (default), light, dark
 customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
@@ -103,10 +103,11 @@ class RootWindow():
         self.patientWindow.label.image = photo_img
 
 
-class PatientWindow:
+class PatientWindow():
     def __init__(self):
+
         top = customtkinter.CTkToplevel()
-        top.geometry("600x600")
+        top.geometry("600x850")
         top.title("Exoskeleton Patient View")
         self.frame = customtkinter.CTkFrame(top)
 
@@ -114,10 +115,32 @@ class PatientWindow:
         resized = im.resize((600, 600), Image.Resampling.LANCZOS)
         ph = ImageTk.PhotoImage(resized)
 
-        self.label = Label(top, image=ph, width=600, height=600)
+        self.label = Label(self.frame, image=ph, width=600, height=600)
         self.label.image = ph  # need to keep the reference of your image to avoid garbage collection
-        self.label.pack()
+        self.label.grid(row=0, column=0)
+        self.frame.grid(row=0, column=0)
 
+        w = 600
+        h = 250
+
+        self.frame_bottom = customtkinter.CTkFrame(top)
+        self.canvas = customtkinter.CTkCanvas(self.frame_bottom, width=w, height=h, bg='gray')
+        self.canvas.grid(row=0, column=0)
+
+        x = w // 2
+        y = h // 2
+        cursor = self.canvas.create_oval(x, y, x+10, y+10, fill='red')
+
+        left_wall = self.canvas.create_rectangle(125, 90, 100, 165, fill='pink')
+
+        self.frame_bottom.grid(row=1, column=0)
+
+    # def canvas_walls(self, position):
+    #     self.shape("square")
+    #     self.shapesize(stretch_len=1, stretch_wid=5)
+    #     self.color("white")
+    #     self.penup()
+    #     self.goto(position)
     #     self.button1 = Button(self.frame, text="Change", command=self.change_img)
     #     self.button1.pack(padx=20, pady=20)
     #     self.frame.pack()
