@@ -152,6 +152,7 @@ class PatientWindow():
         self.label.config(image=photo_img)
         self.label.image = photo_img
 
+
     # def canvas_walls(self, position):
     #     self.shape("square")
     #     self.shapesize(stretch_len=1, stretch_wid=5)
@@ -161,11 +162,7 @@ class PatientWindow():
     #     self.button1 = Button(self.frame, text="Change", command=self.change_img)
     #     self.button1.pack(padx=20, pady=20)
     #     self.frame.pack()
-    #
-    # def change_img(self):
-    #     img2 = ImageTk.PhotoImage(Image.open("images/right-arrow.gif"))
-    #     self.label.configure(image=img2)
-    #     self.label.image = img2
+
 
 
 if __name__ == "__main__":
