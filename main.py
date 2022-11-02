@@ -1,6 +1,5 @@
 from tkinter import *
 from PIL import Image, ImageTk
-# from ArduinoPython import ArduinoCode
 import customtkinter
 from customtkinter import *
 from turtle import Turtle
@@ -55,11 +54,14 @@ class RootWindow():
         button3 = customtkinter.CTkButton(self.frame_right, text="Update Image to Stop", command=self.stop_image)
         button3.grid(padx=50, pady=20, row=2, column=0)
 
+        calibrate_but = customtkinter.CTkButton(self.frame_right, text="Calibrate", command=self.calibrate)
+        calibrate_but.grid(padx=50, pady=20, row=3, column=0)
+
         speed_label = customtkinter.CTkLabel(self.frame_right, text='Speed Setting:')
-        speed_label.grid(row=3, column=0)
+        speed_label.grid(row=4, column=0)
         speed_var = customtkinter.StringVar()
         speed_slider = customtkinter.CTkComboBox(self.frame_right, values=['Slow', 'Medium', 'Fast'], state='normal', command=self.update_speed)
-        speed_slider.grid(row=4, column=0, pady=(0,20))
+        speed_slider.grid(row=5, column=0, pady=(0,20))
 
         self.frame_right.grid(padx=20, pady=50, row=0, column=1)
 
@@ -96,11 +98,16 @@ class RootWindow():
         self.patientWindow.label.image = photo_img
 
     def stop_image(self):
-        stop_img = Image.open("images/stop.gif")
-        stop_img_resized = stop_img.resize((600, 600), Image.Resampling.LANCZOS)
-        photo_img = ImageTk.PhotoImage(stop_img_resized)
-        self.patientWindow.label.config(image=photo_img)
-        self.patientWindow.label.image = photo_img
+        # stop_img = Image.open("images/stop.gif")
+        # stop_img_resized = stop_img.resize((600, 600), Image.Resampling.LANCZOS)
+        # photo_img = ImageTk.PhotoImage(stop_img_resized)
+        # self.patientWindow.label.config(image=photo_img)
+        # self.patientWindow.label.image = photo_img
+        self.patientWindow.stop_image()
+
+    def calibrate(self):
+        # send command to motor to go to center
+        pass
 
 
 class PatientWindow():
@@ -134,6 +141,16 @@ class PatientWindow():
         left_wall = self.canvas.create_rectangle(125, 90, 100, 165, fill='pink')
 
         self.frame_bottom.grid(row=1, column=0)
+
+        # create function that updates canvas here, then call it in main window when needed/condition is met
+        # OR have everything in main window like the update image function rn??
+
+    def stop_image(self):
+        stop_img = Image.open("images/stop.gif")
+        stop_img_resized = stop_img.resize((600, 600), Image.Resampling.LANCZOS)
+        photo_img = ImageTk.PhotoImage(stop_img_resized)
+        self.label.config(image=photo_img)
+        self.label.image = photo_img
 
     # def canvas_walls(self, position):
     #     self.shape("square")
