@@ -1,8 +1,11 @@
+import turtle
 from tkinter import *
 from PIL import Image, ImageTk
 import customtkinter
 from customtkinter import *
-from turtle import Turtle
+import turtle
+from turtle import *
+from PythonArduinoCode import TestFakeArduino
 
 customtkinter.set_appearance_mode("system")  # Modes: system (default), light, dark
 customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
@@ -12,7 +15,9 @@ class RootWindow():
 
     def __init__(self, master):
 
-        self.patientWindow = None
+        # self.patientWindow = None
+        self.arduino_data = TestFakeArduino()
+
         # left frame
         self.frame_left = customtkinter.CTkFrame(master)
 
@@ -78,36 +83,31 @@ class RootWindow():
         pass
 
     def run_trial(self):
+        # must calibrate before so maybe grey it out until calibrate is run?
+        # once at center, send command to arduino to go left, arduino sends "at left" data, send "go center", then left, then back to center
         pass
 
     def update_speed(self):
         pass
 
     def right_arrow(self):
-        right_img = Image.open("images/right-arrow.gif")
-        right_img_resized = right_img.resize((600, 600), Image.Resampling.LANCZOS)
-        photo_img = ImageTk.PhotoImage(right_img_resized)
-        self.patientWindow.label.config(image=photo_img)
-        self.patientWindow.label.image = photo_img
+        if self.arduino_data.receive_data() == 2:
+            self.patientWindow.right_arrow()
+            # self.patientWindow.change_wall_pos((0, 0))
 
     def left_arrow(self):
-        left_img = Image.open("images/left-arrow.gif")
-        left_img_resized = left_img.resize((600, 600), Image.Resampling.LANCZOS)
-        photo_img = ImageTk.PhotoImage(left_img_resized)
-        self.patientWindow.label.config(image=photo_img)
-        self.patientWindow.label.image = photo_img
+        if self.arduino_data.receive_data() == 1:
+            self.patientWindow.left_arrow()
+            # self.patientWindow.change_wall_pos((100, 100))
 
     def stop_image(self):
-        # stop_img = Image.open("images/stop.gif")
-        # stop_img_resized = stop_img.resize((600, 600), Image.Resampling.LANCZOS)
-        # photo_img = ImageTk.PhotoImage(stop_img_resized)
-        # self.patientWindow.label.config(image=photo_img)
-        # self.patientWindow.label.image = photo_img
-        self.patientWindow.stop_image()
+        if self.arduino_data.receive_data() == "at sensor":
+            self.patientWindow.stop_image()
 
     def calibrate(self):
         # send command to motor to go to center
-        pass
+        if self.arduino_data.receive_data() == 0:
+            self.patientWindow.please_wait()
 
 
 class PatientWindow():
@@ -138,9 +138,17 @@ class PatientWindow():
         y = h // 2
         cursor = self.canvas.create_oval(x, y, x+10, y+10, fill='red')
 
-        left_wall = self.canvas.create_rectangle(125, 90, 100, 165, fill='pink')
+        # left_wall = self.canvas.create_rectangle(125, 90, 100, 165, fill='pink')
 
         self.frame_bottom.grid(row=1, column=0)
+
+        self.screen = turtle.TurtleScreen(self.canvas)
+        self.screen.bgcolor("cyan")
+        self.wall = turtle.RawTurtle(self.canvas, shape='turtle')
+        self.wall.shapesize(stretch_len=2, stretch_wid=2)
+        self.wall.color("green")
+        self.wall.setposition((100, 100))
+        # self.wall.home()
 
         # create function that updates canvas here, then call it in main window when needed/condition is met
         # OR have everything in main window like the update image function rn??
@@ -152,17 +160,30 @@ class PatientWindow():
         self.label.config(image=photo_img)
         self.label.image = photo_img
 
+    def right_arrow(self):
+        right_img = Image.open("images/right-arrow.gif")
+        right_img_resized = right_img.resize((600, 600), Image.Resampling.LANCZOS)
+        photo_img = ImageTk.PhotoImage(right_img_resized)
+        self.label.config(image=photo_img)
+        self.label.image = photo_img
 
-    # def canvas_walls(self, position):
-    #     self.shape("square")
-    #     self.shapesize(stretch_len=1, stretch_wid=5)
-    #     self.color("white")
-    #     self.penup()
-    #     self.goto(position)
-    #     self.button1 = Button(self.frame, text="Change", command=self.change_img)
-    #     self.button1.pack(padx=20, pady=20)
-    #     self.frame.pack()
+    def left_arrow(self):
+        left_img = Image.open("images/left-arrow.gif")
+        left_img_resized = left_img.resize((600, 600), Image.Resampling.LANCZOS)
+        photo_img = ImageTk.PhotoImage(left_img_resized)
+        self.label.config(image=photo_img)
+        self.label.image = photo_img
 
+    def please_wait(self):
+        wait_img = Image.open("images/please-wait.png")
+        wait_img_resized = wait_img.resize((600, 600), Image.Resampling.LANCZOS)
+        photo_img = ImageTk.PhotoImage(wait_img_resized)
+        self.label.config(image=photo_img)
+        self.label.image = photo_img
+
+    def change_wall_pos(self, position):
+        self.wall.penup()
+        self.wall.goto(position)
 
 
 if __name__ == "__main__":
