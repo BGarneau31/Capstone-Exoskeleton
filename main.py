@@ -10,7 +10,8 @@ from PythonArduinoCode import TestFakeArduino
 
 customtkinter.set_appearance_mode("system")  # Modes: system (default), light, dark
 customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
-
+RIGHT = (-245, 0)
+LEFT = (245, 0)
 
 class RootWindow():
 
@@ -63,11 +64,14 @@ class RootWindow():
         calibrate_but = customtkinter.CTkButton(self.frame_right, text="Calibrate", command=self.calibrate)
         calibrate_but.grid(padx=50, pady=20, row=3, column=0)
 
+        stop_but = customtkinter.CTkButton(self.frame_right, text="Stop Trial", command=self.stop_trial)
+        stop_but.grid(padx=50, pady=20, row=4, column=0)
+
         speed_label = customtkinter.CTkLabel(self.frame_right, text='Speed Setting:')
-        speed_label.grid(row=4, column=0)
+        speed_label.grid(row=5, column=0)
         self.speed_var = customtkinter.StringVar()
         speed_slider = customtkinter.CTkComboBox(self.frame_right, variable=self.speed_var, values=['Slow', 'Medium', 'Fast'], state='normal', command=self.update_speed)
-        speed_slider.grid(row=5, column=0, pady=(0,20))
+        speed_slider.grid(row=6, column=0, pady=(0,20))
 
         self.frame_right.grid(padx=20, pady=50, row=0, column=1)
 
@@ -85,8 +89,28 @@ class RootWindow():
 
     def run_trial(self):
         # must calibrate before so maybe grey it out until calibrate is run?
-        # once at center, send command to arduino to go left, arduino sends "at left" data, send "go center", then left, then back to center
-        pass
+        # confirm at center
+        # select speed, gray out run trail until speed selected
+        # go left, show left image, delay/wait
+        # wait for sensor to say "at left", since at left and need to go to center, show right image
+        # go right to center
+        # wait for sensor
+        # go right
+        # wait for sensor
+        # go left to center
+        # wait for sensor to say center
+        # stop
+        self.left_arrow()
+        # need delay or wait till command
+        self.go_to_center()
+        # need delay or wait till command
+        self.right_arrow()
+        # need delay or wait till command
+        self.go_to_center()
+        print("Trial Done")
+
+    def stop_trial(self):
+        self.patientWindow.destroy_patient_window()
 
     def update_speed(self, speed):
         if self.speed_var.get() == "Slow":
@@ -98,25 +122,34 @@ class RootWindow():
         if self.speed_var.get() == "Fast":
             self.patientWindow.user_turtle.speed(1)
             self.patientWindow.screen.delay(30)
+        print(self.speed_var.get())
 
     def right_arrow(self):
-        if self.arduino_data.receive_data() == 2:
+        # if self.arduino_data.receive_data() == "go right":
             self.patientWindow.right_arrow()
             self.patientWindow.show_right_wall()
-            # self.update_speed()
-            self.patientWindow.user_turtle.setheading(180)
-            self.patientWindow.user_turtle.speed(0)
-            self.patientWindow.user_turtle.goto((245, 0))
+            self.update_speed(self.speed_var.get())
+            self.patientWindow.user_turtle.goto(LEFT)
 
     def left_arrow(self):
-        if self.arduino_data.receive_data() == 1:
+        # if self.arduino_data.receive_data() == "go left":
             self.patientWindow.left_arrow()
             # self.patientWindow.user_turtle.setheading(180)
-
             self.patientWindow.show_left_wall()
-            self.patientWindow.set_turtle_speed(self.speed_var.get())
+            # self.patientWindow.set_turtle_speed(self.speed_var.get())
+            self.update_speed(self.speed_var.get())
+            self.patientWindow.user_turtle.goto(RIGHT)
 
-            self.patientWindow.user_turtle.goto((-245, 0))
+    def go_to_center(self):
+        # if self.arduino_data.receive_data() == "center":
+            self.patientWindow.show_center_wall()
+            self.update_speed(self.speed_var.get())
+            if self.arudino_data_position() == "at left":
+                self.right_arrow()
+            else:
+                self.left_arrow()
+
+            self.patientWindow.user_turtle.home()
 
     def stop_image(self):
         if self.arduino_data.receive_data() == "at sensor":
@@ -125,17 +158,18 @@ class RootWindow():
     def calibrate(self):
         # send command to motor to go to center
         # if self.arduino_data.receive_data() == 0:
-        self.patientWindow.please_wait()
-        self.patientWindow.user_turtle.home()
+            self.patientWindow.please_wait()
+            self.patientWindow.user_turtle.speed(10)
+            self.patientWindow.user_turtle.home()
 
 
 class PatientWindow():
     def __init__(self):
 
-        top = customtkinter.CTkToplevel()
-        top.geometry("600x850")
-        top.title("Exoskeleton Patient View")
-        self.frame = customtkinter.CTkFrame(top)
+        self.top = customtkinter.CTkToplevel()
+        self.top.geometry("600x850")
+        self.top.title("Exoskeleton Patient View")
+        self.frame = customtkinter.CTkFrame(self.top)
 
         im = Image.open("images/please-wait2.png")
         resized = im.resize((600, 600), Image.Resampling.LANCZOS)
@@ -149,7 +183,7 @@ class PatientWindow():
         w = 600
         h = 250
 
-        self.frame_bottom = customtkinter.CTkFrame(top)
+        self.frame_bottom = customtkinter.CTkFrame(self.top)
         self.canvas = Canvas(self.frame_bottom, width=w, height=h, bg='gray')
         self.canvas.grid(row=0, column=0)
 
@@ -168,6 +202,12 @@ class PatientWindow():
         self.user_turtle.shapesize(stretch_len=1, stretch_wid=1)
         self.user_turtle.color("green")
         self.user_turtle.penup()
+
+        self.center_wall = turtle.RawTurtle(self.screen, shape="square")
+        self.center_wall.hideturtle()
+        self.center_wall.shapesize(stretch_len=2, stretch_wid=2)
+        self.center_wall.color("saddle brown")
+        self.center_wall.penup()
 
         self.left_wall = turtle.RawTurtle(self.screen, shape="square")
         self.left_wall.hideturtle()
@@ -192,6 +232,11 @@ class PatientWindow():
         self.right_wall.hideturtle()
         self.left_wall.showturtle()
         # self.user_turtle.setheading(180)
+
+    def show_center_wall(self):
+        self.right_wall.hideturtle()
+        self.left_wall.hideturtle()
+        self.center_wall.showturtle()
 
     def set_turtle_speed(self, speed):
         # take in info related to selected GUI speed and call function that sends data to arduino in PythonArduinoCode
@@ -232,6 +277,10 @@ class PatientWindow():
         photo_img = ImageTk.PhotoImage(wait_img_resized)
         self.label.config(image=photo_img)
         self.label.image = photo_img
+
+    def destroy_patient_window(self):
+        self.top.destroy()
+        self.top.update()
 
 
 if __name__ == "__main__":
