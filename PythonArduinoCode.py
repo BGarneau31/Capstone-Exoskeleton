@@ -39,7 +39,7 @@ class TestFakeArduino:
     def receive_data(self):
         # read arduino data
         # return data
-        return 2
+        return 1
 
     def send_data(self):
         # send arduino data command
