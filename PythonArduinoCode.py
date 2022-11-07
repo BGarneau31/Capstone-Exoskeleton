@@ -12,24 +12,20 @@ import serial
 #
 #     def receive_data(self):
 #         while True:
-#             self.data = arduino.readline()[:-2]  # end bit get rid of new line arduino characters
+#             self.position_data = arduino.readline()[:-2]  # end bit get rid of new line arduino characters
 #             if self.data:
+
 #                 return self.data
+#
+#     def send_command(self, python_command):
+#         data_from_python = python_command
+#         arduino.write(data_from_python)  # arduino takes this data to update the motor to correct position
 
 
 # python_arduino_connect = PythonArduino()
 # python_arduino_connect.receive_data()
+# python_arduino_connect.send_data()  # this will be imported into main and called in GUI with specifics when needed
 
-# # Now we can write a simple script that sends data from Python to the Arduino, and then prints out what it gets back.
-# import serial, time
-# arduino = serial.Serial('COM1', 115200, timeout=.1)
-# time.sleep(1) #give the connection a second to settle
-# arduino.write("Hello from Python!")
-# while True:
-# 	data = arduino.readline()
-# 	if data:
-# 		print data.rstrip('\n') #strip out the new lines for now
-# 		# (better to do .read() in the long run for this reason
 
 class TestFakeArduino:
 
@@ -39,8 +35,9 @@ class TestFakeArduino:
     def receive_data(self):
         # read arduino data
         # return data
-        return 1
+        return 1, 2, 3
 
-    def send_data(self):
+    def send_data(self, python_data):
         # send arduino data command
-        pass
+        data_from_python = python_data
+        print(data_from_python)
