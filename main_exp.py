@@ -1,24 +1,26 @@
 import csv
 import time
-import turtle
 from tkinter import *
 from PIL import Image, ImageTk
 import customtkinter
 from customtkinter import *
 import turtle
-from turtle import *
 from PythonArduinoCode import TestFakeArduino
 
 customtkinter.set_appearance_mode("system")  # Modes: system (default), light, dark
 customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
-LEFT = (-245, 0)
-RIGHT = (245, 0)
+LEFT = (-450, 0)
+RIGHT = (450, 0)
+CLOSE_LEFT = (-225, 0)
+CLOSE_RIGHT = (225, 0)
+now = time.time()
+print(now)
 
 
-class RootWindow():
+class RootWindow:
 
     def __init__(self, master):
-        self.patientWindow = None
+        self.patientWindow = PatientWindow()
         self.arduino_data = TestFakeArduino()  # pull in arduino data object
 
         # left frame
@@ -45,8 +47,14 @@ class RootWindow():
         collect_data_box = customtkinter.CTkCheckBox(self.frame_left, text="Record Data", command=self.record_data)
         collect_data_box.grid(row=4, column=0, columnspan=2, padx=50, pady=10)
 
-        self.run_trial_but = customtkinter.CTkButton(self.frame_left, text="Run Trial", command=self.run_trial)
-        self.run_trial_but.grid(row=5, column=0, columnspan=2, padx=10, pady=20)
+        speed_label = customtkinter.CTkLabel(self.frame_left, text='Speed Setting:')
+        speed_label.grid(row=5, column=0, columnspan=2, pady=(20, 0))
+        self.speed_var = customtkinter.StringVar()
+        speed_slider = customtkinter.CTkComboBox(self.frame_left, variable=self.speed_var, values=['Slow', 'Medium', 'Fast'], state='normal', command=self.update_speed)
+        speed_slider.grid(row=6, column=0, columnspan=2, padx=10, pady=20)
+
+        self.run_trial_but = customtkinter.CTkButton(self.frame_left, text="Run Trial", command=self.run_trial, fg_color="green")
+        self.run_trial_but.grid(row=7, column=0, columnspan=2, padx=10, pady=20)
 
         self.frame_left.grid(padx=40, pady=50, row=0, column=0)
 
@@ -56,26 +64,23 @@ class RootWindow():
         close_left_but = customtkinter.CTkButton(self.frame_right, text="Go Close Left", command=self.go_close_left)
         close_left_but.grid(padx=50, pady=20, row=0, column=0)
 
-        close_right_but = customtkinter.CTkButton(self.frame_right, text="Go Close Right", command=self.go_close_right)
-        close_right_but.grid(padx=50, pady=20, row=1, column=0)
-
         far_left_but = customtkinter.CTkButton(self.frame_right, text="Go Far Left", command=self.go_far_left)
-        far_left_but.grid(padx=50, pady=20, row=2, column=0)
+        far_left_but.grid(padx=50, pady=20, row=1, column=0)
+
+        close_right_but = customtkinter.CTkButton(self.frame_right, text="Go Close Right", command=self.go_close_right)
+        close_right_but.grid(padx=50, pady=20, row=0, column=1)
 
         far_right_but = customtkinter.CTkButton(self.frame_right, text="Go Far Right", command=self.go_far_right)
-        far_right_but.grid(padx=50, pady=20, row=2, column=0)
+        far_right_but.grid(padx=50, pady=20, row=1, column=1)
+
+        center_but = customtkinter.CTkButton(self.frame_right, text="Go to Center", command=self.go_to_center)
+        center_but.grid(padx=50, pady=20, row=3, column=0, columnspan=2)
 
         calibrate_but = customtkinter.CTkButton(self.frame_right, text="Calibrate", command=self.calibrate)
-        calibrate_but.grid(padx=50, pady=20, row=3, column=0)
+        calibrate_but.grid(padx=50, pady=20, row=4, column=0, columnspan=2)
 
-        stop_but = customtkinter.CTkButton(self.frame_right, text="Stop Trial", command=self.stop_trial)
-        stop_but.grid(padx=50, pady=20, row=4, column=0)
-
-        speed_label = customtkinter.CTkLabel(self.frame_right, text='Speed Setting:')
-        speed_label.grid(row=5, column=0)
-        self.speed_var = customtkinter.StringVar()
-        speed_slider = customtkinter.CTkComboBox(self.frame_right, variable=self.speed_var, values=['Slow', 'Medium', 'Fast'], state='normal', command=self.update_speed)
-        speed_slider.grid(row=6, column=0, pady=(0,20))
+        stop_but = customtkinter.CTkButton(self.frame_right, text="Stop Trial", command=self.stop_trial, fg_color="red")
+        stop_but.grid(padx=50, pady=20, row=5, column=0, columnspan=2)
 
         self.frame_right.grid(padx=20, pady=50, row=0, column=1)
 
@@ -88,7 +93,7 @@ class RootWindow():
         # update csv file with user number and trial num
         # uses .get() with entry text variables
         trial_data = [self.user_entry_var.get(), self.trial_entry_var.get()]
-        with open('exo_data.csv','w') as file:
+        with open('exo_data.csv', 'w') as file:
             writer = csv.writer(file)
             writer.writerow(['User Number', 'Trial Number'])
 
@@ -123,6 +128,7 @@ class RootWindow():
         print("Trial Done")
 
     def stop_trial(self):
+        self.arduino_data.send_data("stop")
         self.patientWindow.destroy_patient_window()
 
     def update_speed(self, speed):
@@ -141,59 +147,79 @@ class RootWindow():
         self.patientWindow.user_turtle.speed(10)
         self.patientWindow.user_turtle.setheading(direction)
         self.update_speed(self.speed_var.get())
+        # self.patientWindow.set_turtle_speed(self.speed_var.get())
 
     def go_right(self):
         # if self.arduino_data.receive_data() == "go right":
         #     self.patientWindow.right_arrow()
-            self.patientWindow.show_right_wall()
-            # self.update_speed(self.speed_var.get())
-            self.patientWindow.user_turtle.goto(RIGHT)
+        self.patientWindow.show_right_wall()
+        # self.update_speed(self.speed_var.get())
+        self.patientWindow.user_turtle.goto(RIGHT)
 
     def go_left(self):
         # if self.arduino_data.receive_data() == "go left":
         #     self.patientWindow.left_arrow()
-            self.patientWindow.show_left_wall()
-            # self.update_speed(self.speed_var.get())
-            self.patientWindow.user_turtle.goto(LEFT)
+        self.patientWindow.show_left_wall()
+        # self.update_speed(self.speed_var.get())
+        self.patientWindow.user_turtle.goto(LEFT)
 
     def go_to_center(self):
-        # if self.arduino_data.receive_data() == "center":
-            self.patientWindow.show_center_wall()
-            # self.update_speed(self.speed_var.get())
-            # if self.arudino_data_position() == "at left":
-            # if self.patientWindow.user_turtle.pos == RIGHT:
-            #     self.patientWindow.left_arrow()
-            #     self.patientWindow.user_turtle.home()
-            # else:
-            #     self.patientWindow.right_arrow()
-            self.patientWindow.user_turtle.home()
+        self.arduino_data.send_data(f"center")
+        self.patientWindow.show_center_wall()
+        if self.patientWindow.user_turtle.xcor() < 1:
+            self.patientWindow.right_arrow
+        if self.patientWindow.user_turtle.xcor() > 1:
+            self.patientWindow.left_arrow
+        self.patientWindow.user_turtle.goto((0, 0))
 
     def go_close_left(self):
-        self.arduino_data.send_data(f"close left {specifc_speed}")  # need to change the string and speed to be read
-        pass
+        self.arduino_data.send_data(f"close left")  # need to change the string and speed to be read
+        self.patientWindow.show_left_wall_close()
+        if self.patientWindow.user_turtle.xcor() > -225:
+            self.patientWindow.left_arrow()
+            self.set_heading(180)
+        else:
+            self.patientWindow.right_arrow()
+            self.set_heading(0)
+        self.patientWindow.user_turtle.goto(CLOSE_LEFT)
 
     def go_close_right(self):
-        self.arduino_data.send_data(f"close right {specifc_speed}")
-        pass
+        self.arduino_data.send_data(f"close right")
+        self.patientWindow.show_right_wall_close()
+        if self.patientWindow.user_turtle.xcor() < 225:
+            self.patientWindow.right_arrow()
+            self.set_heading(0)
+        else:
+            self.patientWindow.left_arrow()
+            self.set_heading(180)
+        self.patientWindow.user_turtle.goto(CLOSE_RIGHT)
 
     def go_far_left(self):
-        self.arduino_data.send_data(f"far left {specifc_speed}")
-        pass
+        self.arduino_data.send_data(f"far left")
+        self.patientWindow.show_left_wall()
+        self.patientWindow.left_arrow()
+        self.set_heading(180)
+        self.patientWindow.user_turtle.goto(LEFT)
 
     def go_far_right(self):
-        self.arduino_data.send_data(f"far left {specifc_speed}")
-        pass
+        self.arduino_data.send_data(f"far right")
+        self.patientWindow.show_right_wall()
+        self.patientWindow.right_arrow()
+        self.set_heading(0)
+        self.patientWindow.user_turtle.goto(RIGHT)
 
     def calibrate(self):
-        self.arduino_data.send_data("center 00") # arduino takes location and speed command
-        time.sleep(5)
+        self.arduino_data.send_data("center 00")
+        # time.sleep(5)
+        self.patientWindow.please_wait()
+        self.patientWindow.user_turtle.speed(10)
+        self.patientWindow.user_turtle.home()
         # if self.arduino_data.receive_data() == "at center":
-            self.patientWindow.please_wait()
-            self.patientWindow.user_turtle.speed(10)
-            self.patientWindow.user_turtle.home()
+        #     print("Done, at center")
 
 
-class PatientWindow():
+# noinspection PyUnresolvedReferences
+class PatientWindow:
     def __init__(self):
 
         self.top = customtkinter.CTkToplevel()
@@ -207,8 +233,6 @@ class PatientWindow():
         self.frame_top = customtkinter.CTkFrame(self.top)
         self.canvas = Canvas(self.frame_top, width=w, height=h, bg='gray')
         self.canvas.grid(row=0, column=0)
-        x = w // 2
-        y = h // 2
         self.frame_top.grid(row=0, column=0)
 
         # Bottom Frame
@@ -242,42 +266,64 @@ class PatientWindow():
         self.left_wall.shapesize(stretch_len=1, stretch_wid=5)
         self.left_wall.color("saddle brown")
         self.left_wall.penup()
-        self.left_wall.setx(-250)
+        self.left_wall.setx(-450)
 
         self.right_wall = turtle.RawTurtle(self.screen, shape="square")
         self.right_wall.hideturtle()
         self.right_wall.shapesize(stretch_len=1, stretch_wid=5)
         self.right_wall.color("saddle brown")
         self.right_wall.penup()
-        self.right_wall.setx(250)
+        self.right_wall.setx(450)
 
         self.left_wall_close = turtle.RawTurtle(self.screen, shape="square")
         self.left_wall_close.hideturtle()
         self.left_wall_close.shapesize(stretch_len=1, stretch_wid=5)
         self.left_wall_close.color("saddle brown")
         self.left_wall_close.penup()
-        self.left_wall_close.setx(-125)
+        self.left_wall_close.setx(-225)
 
         self.right_wall_close = turtle.RawTurtle(self.screen, shape="square")
         self.right_wall_close.hideturtle()
         self.right_wall_close.shapesize(stretch_len=1, stretch_wid=5)
         self.right_wall_close.color("saddle brown")
         self.right_wall_close.penup()
-        self.right_wall_close.setx(125)
+        self.right_wall_close.setx(225)
 
     # Top Level Window Functions
 
     def show_right_wall(self):
+        self.center_wall.hideturtle()
         self.left_wall.hideturtle()
+        self.right_wall_close.hideturtle()
+        self.left_wall_close.hideturtle()
         self.right_wall.showturtle()
+
+    def show_right_wall_close(self):
+        self.center_wall.hideturtle()
+        self.left_wall.hideturtle()
+        self.left_wall_close.hideturtle()
+        self.right_wall.hideturtle()
+        self.right_wall_close.showturtle()
 
     def show_left_wall(self):
         self.right_wall.hideturtle()
+        self.center_wall.hideturtle()
+        self.right_wall_close.hideturtle()
+        self.left_wall_close.hideturtle()
         self.left_wall.showturtle()
+
+    def show_left_wall_close(self):
+        self.center_wall.hideturtle()
+        self.left_wall.hideturtle()
+        self.right_wall_close.hideturtle()
+        self.right_wall.hideturtle()
+        self.left_wall_close.showturtle()
 
     def show_center_wall(self):
         self.right_wall.hideturtle()
         self.left_wall.hideturtle()
+        self.left_wall_close.hideturtle()
+        self.right_wall_close.hideturtle()
         self.center_wall.showturtle()
 
     def set_turtle_speed(self, speed):
@@ -334,7 +380,7 @@ class PatientWindow():
 
 if __name__ == "__main__":
     root = CTk()
-    root.geometry("%dx%d+%d+%d" % (690, 500, 300, 300))
+    root.geometry("%dx%d+%d+%d" % (920, 500, 300, 300))
     root.title("Exoskeleton Technician Controls")
     main_window = RootWindow(root)
     root.mainloop()
