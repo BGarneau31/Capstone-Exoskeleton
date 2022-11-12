@@ -13,14 +13,14 @@ LEFT = (-450, 0)
 RIGHT = (450, 0)
 CLOSE_LEFT = (-225, 0)
 CLOSE_RIGHT = (225, 0)
-now = time.time()
-print(now)
+now = time.ctime()
+print("Current Time:", now)
 
 
 class RootWindow:
 
     def __init__(self, master):
-        self.patientWindow = PatientWindow()
+        self.patientWindow = PatientWindow()  # opens patient window
         self.arduino_data = TestFakeArduino()  # pull in arduino data object
 
         # left frame
@@ -95,7 +95,7 @@ class RootWindow:
         trial_data = [self.user_entry_var.get(), self.trial_entry_var.get()]
         with open('exo_data.csv', 'w') as file:
             writer = csv.writer(file)
-            writer.writerow(['User Number', 'Trial Number'])
+            writer.writerow(['User Number ', 'Trial Number'])
 
             writer.writerow(trial_data)
         print("User and Trial Data Collected")
