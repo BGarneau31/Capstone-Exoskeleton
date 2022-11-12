@@ -162,7 +162,6 @@ class RootWindow:
         self.patientWindow.screen.delay(0)
         self.patientWindow.user_turtle.setheading(direction)
         self.update_speed(self.speed_var.get())
-        # self.patientWindow.set_turtle_speed(self.speed_var.get())
 
     def go_to_center(self):
         self.arduino_data.send_data(f"center")
