@@ -34,7 +34,7 @@ class TestFakeArduino:
 
     def receive_data(self):
         # read arduino data
-        # return data
+        # return data as string to print to console to show tech that motor is finished with command and in position
         return 1, 2, 3
 
     def send_data(self, python_data):

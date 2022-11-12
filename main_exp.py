@@ -5,7 +5,7 @@ from PIL import Image, ImageTk
 import customtkinter
 from customtkinter import *
 import turtle
-from PythonArduinoCode import TestFakeArduino
+from PythonArduino import TestFakeArduino
 
 customtkinter.set_appearance_mode("system")  # Modes: system (default), light, dark
 customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
@@ -86,7 +86,7 @@ class RootWindow:
 
     # Root Window Functions
 
-    def open(self):
+    def open(self):  # toplevel window now created first when program run, so this function is depreciated
         self.patientWindow = PatientWindow()
 
     def update_user_data(self):
@@ -107,22 +107,14 @@ class RootWindow:
     def run_trial(self):
         # need delay or wait till command between each left/right command
         # time.sleep(1)
-
-        self.patientWindow.left_arrow()
-        self.set_heading(180)
-        self.go_left()
-
-        self.patientWindow.right_arrow()
-        self.set_heading(0)
+        self.go_close_left()
+        self.go_far_left()
+        self.go_close_left()
         self.go_to_center()
-
-        self.patientWindow.right_arrow()
-        self.go_right()
-
-        self.patientWindow.left_arrow()
-        self.set_heading(180)
+        self.go_close_right()
+        self.go_far_right()
+        self.go_close_right()
         self.go_to_center()
-
         self.patientWindow.good_job_img()
 
         print("Trial Done")
@@ -130,20 +122,6 @@ class RootWindow:
     def stop_trial(self):
         self.arduino_data.send_data("stop")
         self.patientWindow.destroy_patient_window()
-
-    def go_right(self):
-        # if self.arduino_data.receive_data() == "go right":
-        #     self.patientWindow.right_arrow()
-        self.patientWindow.show_right_wall()
-        # self.update_speed(self.speed_var.get())
-        self.patientWindow.user_turtle.goto(RIGHT)
-
-    def go_left(self):
-        # if self.arduino_data.receive_data() == "go left":
-        #     self.patientWindow.left_arrow()
-        self.patientWindow.show_left_wall()
-        # self.update_speed(self.speed_var.get())
-        self.patientWindow.user_turtle.goto(LEFT)
 
     def update_speed(self, speed):
         if self.speed_var.get() == "Slow":
@@ -175,7 +153,7 @@ class RootWindow:
         self.patientWindow.user_turtle.goto((0, 0))
 
     def go_close_left(self):
-        self.arduino_data.send_data(f"close left")  # need to change the string and speed to be read
+        self.arduino_data.send_data(f"close left")  # need to change to string and speed to be read by arduino
         self.patientWindow.show_left_wall_close()
         if self.patientWindow.user_turtle.xcor() > -225:
             self.patientWindow.left_arrow()
@@ -221,7 +199,6 @@ class RootWindow:
         #     print("Done, at center")
 
 
-# noinspection PyUnresolvedReferences
 class PatientWindow:
     def __init__(self):
 
@@ -336,6 +313,7 @@ class PatientWindow:
         self.right_wall_close.hideturtle()
         self.center_wall.hideturtle()
 
+    # function to update speed of turtle object
     def set_turtle_speed(self, speed):
         # take in info related to selected GUI speed and call function that sends data to arduino in PythonArduinoCode
         if speed == "Slow":
@@ -348,6 +326,7 @@ class PatientWindow:
             self.user_turtle.speed(1)
             self.screen.delay(30)
 
+    # function to update images for patient commands
     def stop_image(self):
         stop_img = Image.open("images/stop.gif")
         stop_img_resized = stop_img.resize((600, 400), Image.Resampling.LANCZOS)

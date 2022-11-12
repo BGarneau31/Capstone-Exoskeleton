@@ -7,7 +7,7 @@ import customtkinter
 from customtkinter import *
 import turtle
 from turtle import *
-from PythonArduinoCode import TestFakeArduino
+from PythonArduino import TestFakeArduino
 
 customtkinter.set_appearance_mode("system")  # Modes: system (default), light, dark
 customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
