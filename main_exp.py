@@ -131,24 +131,6 @@ class RootWindow:
         self.arduino_data.send_data("stop")
         self.patientWindow.destroy_patient_window()
 
-    def update_speed(self, speed):
-        if self.speed_var.get() == "Slow":
-            self.patientWindow.user_turtle.speed(1)
-            self.patientWindow.screen.delay(300)
-        if self.speed_var.get() == "Medium":
-            self.patientWindow.user_turtle.speed(1)
-            self.patientWindow.screen.delay(100)
-        if self.speed_var.get() == "Fast":
-            self.patientWindow.user_turtle.speed(1)
-            self.patientWindow.screen.delay(30)
-        print(self.speed_var.get())
-
-    def set_heading(self, direction):
-        self.patientWindow.user_turtle.speed(10)
-        self.patientWindow.user_turtle.setheading(direction)
-        self.update_speed(self.speed_var.get())
-        # self.patientWindow.set_turtle_speed(self.speed_var.get())
-
     def go_right(self):
         # if self.arduino_data.receive_data() == "go right":
         #     self.patientWindow.right_arrow()
@@ -163,13 +145,34 @@ class RootWindow:
         # self.update_speed(self.speed_var.get())
         self.patientWindow.user_turtle.goto(LEFT)
 
+    def update_speed(self, speed):
+        if self.speed_var.get() == "Slow":
+            self.patientWindow.user_turtle.speed(1)
+            self.patientWindow.screen.delay(300)
+        if self.speed_var.get() == "Medium":
+            self.patientWindow.user_turtle.speed(1)
+            self.patientWindow.screen.delay(100)
+        if self.speed_var.get() == "Fast":
+            self.patientWindow.user_turtle.speed(1)
+            self.patientWindow.screen.delay(30)
+        print(self.speed_var.get())
+
+    def set_heading(self, direction):
+        self.patientWindow.user_turtle.speed(10)
+        self.patientWindow.screen.delay(0)
+        self.patientWindow.user_turtle.setheading(direction)
+        self.update_speed(self.speed_var.get())
+        # self.patientWindow.set_turtle_speed(self.speed_var.get())
+
     def go_to_center(self):
         self.arduino_data.send_data(f"center")
         self.patientWindow.show_center_wall()
         if self.patientWindow.user_turtle.xcor() < 1:
-            self.patientWindow.right_arrow
+            self.patientWindow.right_arrow()
+            self.set_heading(0)
         if self.patientWindow.user_turtle.xcor() > 1:
-            self.patientWindow.left_arrow
+            self.patientWindow.left_arrow()
+            self.set_heading(180)
         self.patientWindow.user_turtle.goto((0, 0))
 
     def go_close_left(self):
@@ -212,6 +215,7 @@ class RootWindow:
         self.arduino_data.send_data("center 00")
         # time.sleep(5)
         self.patientWindow.please_wait()
+        self.patientWindow.hide_all_walls()
         self.patientWindow.user_turtle.speed(10)
         self.patientWindow.user_turtle.home()
         # if self.arduino_data.receive_data() == "at center":
@@ -325,6 +329,13 @@ class PatientWindow:
         self.left_wall_close.hideturtle()
         self.right_wall_close.hideturtle()
         self.center_wall.showturtle()
+
+    def hide_all_walls(self):
+        self.right_wall.hideturtle()
+        self.left_wall.hideturtle()
+        self.left_wall_close.hideturtle()
+        self.right_wall_close.hideturtle()
+        self.center_wall.hideturtle()
 
     def set_turtle_speed(self, speed):
         # take in info related to selected GUI speed and call function that sends data to arduino in PythonArduinoCode
