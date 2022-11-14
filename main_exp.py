@@ -50,7 +50,7 @@ class RootWindow:
         speed_label = customtkinter.CTkLabel(self.frame_left, text='Speed Setting:')
         speed_label.grid(row=5, column=0, columnspan=2, pady=(20, 0))
         self.speed_var = customtkinter.StringVar()
-        speed_slider = customtkinter.CTkComboBox(self.frame_left, variable=self.speed_var, values=['Slow', 'Medium', 'Fast'], state='normal', command=self.update_speed)
+        speed_slider = customtkinter.CTkComboBox(self.frame_left, variable=self.speed_var, values=['Slow', 'Fast'], state='normal', command=self.update_speed)
         speed_slider.grid(row=6, column=0, columnspan=2, padx=10, pady=20)
 
         self.run_trial_but = customtkinter.CTkButton(self.frame_left, text="Run Trial", command=self.run_trial, fg_color="green")
@@ -212,7 +212,6 @@ class RootWindow:
         self.patientWindow.right_arrow()
         self.set_heading(0)
         self.patientWindow.user_turtle.goto(RIGHT)
-
 
     def calibrate(self):
         self.arduino_data.send_data("01")
