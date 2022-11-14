@@ -5,7 +5,7 @@ from PIL import Image, ImageTk
 import customtkinter
 from customtkinter import *
 import turtle
-from PythonArduino import TestFakeArduino
+from PythonArduino import PythonArduino
 
 customtkinter.set_appearance_mode("system")  # Modes: system (default), light, dark
 customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
@@ -21,7 +21,7 @@ class RootWindow:
 
     def __init__(self, master):
         self.patientWindow = PatientWindow()  # opens patient window
-        self.arduino_data = TestFakeArduino()  # pull in arduino data object
+        self.arduino_data = PythonArduino()  # pull in arduino data object
 
         # left frame
         self.frame_left = customtkinter.CTkFrame(master)
@@ -142,7 +142,12 @@ class RootWindow:
         self.update_speed(self.speed_var.get())
 
     def go_to_center(self):
-        self.arduino_data.send_data(f"center")
+        if self.speed_var.get() == "Slow":
+            self.arduino_data.send_data(f"00")
+            time.sleep(2)
+        else:
+            self.arduino_data.send_data(f"01")
+            time.sleep(2)
         self.patientWindow.show_center_wall()
         if self.patientWindow.user_turtle.xcor() < 1:
             self.patientWindow.right_arrow()
@@ -153,7 +158,12 @@ class RootWindow:
         self.patientWindow.user_turtle.goto((0, 0))
 
     def go_close_left(self):
-        self.arduino_data.send_data(f"close left")  # need to change to string and speed to be read by arduino
+        if self.speed_var.get() == "Slow":
+            self.arduino_data.send_data(f"10")
+            time.sleep(2)
+        else:
+            self.arduino_data.send_data(f"11")
+            time.sleep(2)
         self.patientWindow.show_left_wall_close()
         if self.patientWindow.user_turtle.xcor() > -225:
             self.patientWindow.left_arrow()
@@ -164,7 +174,12 @@ class RootWindow:
         self.patientWindow.user_turtle.goto(CLOSE_LEFT)
 
     def go_close_right(self):
-        self.arduino_data.send_data(f"close right")
+        if self.speed_var.get() == "Slow":
+            self.arduino_data.send_data(f"30")
+            time.sleep(2)
+        else:
+            self.arduino_data.send_data(f"31")
+            time.sleep(2)
         self.patientWindow.show_right_wall_close()
         if self.patientWindow.user_turtle.xcor() < 225:
             self.patientWindow.right_arrow()
@@ -175,21 +190,32 @@ class RootWindow:
         self.patientWindow.user_turtle.goto(CLOSE_RIGHT)
 
     def go_far_left(self):
-        self.arduino_data.send_data(f"far left")
+        if self.speed_var.get() == "Slow":
+            self.arduino_data.send_data(f"20")
+            time.sleep(2)
+        else:
+            self.arduino_data.send_data(f"21")
+            time.sleep(2)
         self.patientWindow.show_left_wall()
         self.patientWindow.left_arrow()
         self.set_heading(180)
         self.patientWindow.user_turtle.goto(LEFT)
 
     def go_far_right(self):
-        self.arduino_data.send_data(f"far right")
+        if self.speed_var.get() == "Slow":
+            self.arduino_data.send_data(f"40")
+            time.sleep(2)
+        else:
+            self.arduino_data.send_data(f"41")
+            time.sleep(2)
         self.patientWindow.show_right_wall()
         self.patientWindow.right_arrow()
         self.set_heading(0)
         self.patientWindow.user_turtle.goto(RIGHT)
 
+
     def calibrate(self):
-        self.arduino_data.send_data("center 00")
+        self.arduino_data.send_data("01")
         # time.sleep(5)
         self.patientWindow.please_wait()
         self.patientWindow.hide_all_walls()
