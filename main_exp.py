@@ -231,7 +231,7 @@ class PatientWindow:
         self.screen = turtle.TurtleScreen(self.canvas)
         self.screen.bgcolor("cyan")
         self.user_turtle = turtle.RawTurtle(self.screen, shape='turtle')
-        self.user_turtle.shapesize(stretch_len=1, stretch_wid=1)
+        self.user_turtle.shapesize(stretch_len=2, stretch_wid=2)
         self.user_turtle.color("green")
         self.user_turtle.penup()
 
