@@ -220,8 +220,7 @@ class RootWindow:
         self.patientWindow.hide_all_walls()
         self.patientWindow.user_turtle.speed(10)
         self.patientWindow.user_turtle.home()
-        # if self.arduino_data.receive_data() == "at center":
-        #     print("Done, at center")
+
 
 
 class PatientWindow:
