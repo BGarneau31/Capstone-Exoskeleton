@@ -120,7 +120,7 @@ class RootWindow:
         print("Trial Done")
 
     def stop_trial(self):
-        self.arduino_data.send_data("stop")
+        self.arduino_data.send_data("stop")  # will need to update this with actual code command to send to kill the motor
         self.patientWindow.destroy_patient_window()
 
     def update_speed(self, speed):
