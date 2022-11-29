@@ -126,7 +126,7 @@ class RootWindow:
     def update_speed(self, speed):
         if self.speed_var.get() == "Slow":
             self.patientWindow.user_turtle.speed(1)
-            self.patientWindow.screen.delay(300)
+            self.patientWindow.screen.delay(60)
         if self.speed_var.get() == "Medium":
             self.patientWindow.user_turtle.speed(1)
             self.patientWindow.screen.delay(100)
@@ -144,10 +144,10 @@ class RootWindow:
     def go_to_center(self):
         if self.speed_var.get() == "Slow":
             self.arduino_data.send_data(f"00")
-            time.sleep(2)
+            time.sleep(1)
         else:
             self.arduino_data.send_data(f"01")
-            time.sleep(2)
+            time.sleep(1)
         self.patientWindow.show_center_wall()
         if self.patientWindow.user_turtle.xcor() < 1:
             self.patientWindow.right_arrow()
@@ -160,10 +160,10 @@ class RootWindow:
     def go_close_left(self):
         if self.speed_var.get() == "Slow":
             self.arduino_data.send_data(f"10")
-            time.sleep(2)
+            time.sleep(1)
         else:
             self.arduino_data.send_data(f"11")
-            time.sleep(2)
+            time.sleep(1)
         self.patientWindow.show_left_wall_close()
         if self.patientWindow.user_turtle.xcor() > -225:
             self.patientWindow.left_arrow()
@@ -176,10 +176,10 @@ class RootWindow:
     def go_close_right(self):
         if self.speed_var.get() == "Slow":
             self.arduino_data.send_data(f"30")
-            time.sleep(2)
+            time.sleep(1)
         else:
             self.arduino_data.send_data(f"31")
-            time.sleep(2)
+            time.sleep(1)
         self.patientWindow.show_right_wall_close()
         if self.patientWindow.user_turtle.xcor() < 225:
             self.patientWindow.right_arrow()
@@ -192,10 +192,10 @@ class RootWindow:
     def go_far_left(self):
         if self.speed_var.get() == "Slow":
             self.arduino_data.send_data(f"20")
-            time.sleep(2)
+            time.sleep(1)
         else:
             self.arduino_data.send_data(f"21")
-            time.sleep(2)
+            time.sleep(1)
         self.patientWindow.show_left_wall()
         self.patientWindow.left_arrow()
         self.set_heading(180)
@@ -204,10 +204,10 @@ class RootWindow:
     def go_far_right(self):
         if self.speed_var.get() == "Slow":
             self.arduino_data.send_data(f"40")
-            time.sleep(2)
+            time.sleep(1)
         else:
             self.arduino_data.send_data(f"41")
-            time.sleep(2)
+            time.sleep(1)
         self.patientWindow.show_right_wall()
         self.patientWindow.right_arrow()
         self.set_heading(0)
