@@ -227,7 +227,7 @@ class PatientWindow:
     def __init__(self):
 
         self.top = customtkinter.CTkToplevel()
-        self.top.geometry("%dx%d+%d+%d" % (700, 625, 2700, 50))
+        self.top.geometry("%dx%d+%d+%d" % (700, 625, 2700, 50))  # old was 1050, 900, 2350, 50
         self.top.title("Exoskeleton Patient View")
 
         # Top Frame
@@ -359,14 +359,14 @@ class PatientWindow:
         self.label.image = photo_img
 
     def right_arrow(self):
-        right_img = Image.open("images/right-arrow.gif")
+        right_img = Image.open("images/green right arrow.png")
         right_img_resized = right_img.resize((600*2, 400*2), Image.Resampling.LANCZOS)
         photo_img = ImageTk.PhotoImage(right_img_resized)
         self.label.config(image=photo_img)
         self.label.image = photo_img
 
     def left_arrow(self):
-        left_img = Image.open("images/left-arrow.gif")
+        left_img = Image.open("images/green left arrow.png")
         left_img_resized = left_img.resize((600*2, 400*2), Image.Resampling.LANCZOS)
         photo_img = ImageTk.PhotoImage(left_img_resized)
         self.label.config(image=photo_img)
