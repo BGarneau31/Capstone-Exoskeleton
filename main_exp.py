@@ -9,10 +9,10 @@ from PythonArduino import PythonArduino
 
 customtkinter.set_appearance_mode("system")  # Modes: system (default), light, dark
 customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
-LEFT = (-450, 0)
-RIGHT = (450, 0)
-CLOSE_LEFT = (-225, 0)
-CLOSE_RIGHT = (225, 0)
+LEFT = (-450*2, 0)
+RIGHT = (450*2, 0)
+CLOSE_LEFT = (-225*2, 0)
+CLOSE_RIGHT = (225*2, 0)
 now = time.ctime()
 print("Current Time:", now)
 
@@ -165,7 +165,7 @@ class RootWindow:
             self.arduino_data.send_data(f"11")
             time.sleep(1)
         self.patientWindow.show_left_wall_close()
-        if self.patientWindow.user_turtle.xcor() > -225:
+        if self.patientWindow.user_turtle.xcor() > -225*2:
             self.patientWindow.left_arrow()
             self.set_heading(180)
         else:
@@ -181,7 +181,7 @@ class RootWindow:
             self.arduino_data.send_data(f"31")
             time.sleep(1)
         self.patientWindow.show_right_wall_close()
-        if self.patientWindow.user_turtle.xcor() < 225:
+        if self.patientWindow.user_turtle.xcor() < 225*2:
             self.patientWindow.right_arrow()
             self.set_heading(0)
         else:
@@ -227,12 +227,12 @@ class PatientWindow:
     def __init__(self):
 
         self.top = customtkinter.CTkToplevel()
-        self.top.geometry("%dx%d+%d+%d" % (1050, 900, 2300, 50))
+        self.top.geometry("%dx%d+%d+%d" % (700, 625, 2700, 50))
         self.top.title("Exoskeleton Patient View")
 
         # Top Frame
-        w = 1050
-        h = 450
+        w = 1050*2
+        h = 450*2
 
         self.frame_top = customtkinter.CTkFrame(self.top)
         self.canvas = Canvas(self.frame_top, width=w, height=h, bg='gray')
@@ -243,10 +243,10 @@ class PatientWindow:
         self.frame_bottom = customtkinter.CTkFrame(self.top)
 
         im = Image.open("images/please-wait2.png")
-        resized = im.resize((600, 400), Image.Resampling.LANCZOS)
+        resized = im.resize((600*2, 400*2), Image.Resampling.LANCZOS)
         ph = ImageTk.PhotoImage(resized)
 
-        self.label = Label(self.frame_bottom, image=ph, width=600, height=400)
+        self.label = Label(self.frame_bottom, image=ph, width=600*2, height=400*2)
         self.label.image = ph  # need to keep the reference of your image to avoid garbage collection
         self.label.grid(row=1, column=0)
         self.frame_bottom.grid(row=1, column=0, pady=20)
@@ -255,43 +255,43 @@ class PatientWindow:
         self.screen = turtle.TurtleScreen(self.canvas)
         self.screen.bgcolor("cyan")
         self.user_turtle = turtle.RawTurtle(self.screen, shape='turtle')
-        self.user_turtle.shapesize(stretch_len=2, stretch_wid=2)
+        self.user_turtle.shapesize(stretch_len=4, stretch_wid=4)
         self.user_turtle.color("green")
         self.user_turtle.penup()
 
         self.center_wall = turtle.RawTurtle(self.screen, shape="circle")
         self.center_wall.hideturtle()
-        self.center_wall.shapesize(stretch_len=2, stretch_wid=2)
+        self.center_wall.shapesize(stretch_len=5, stretch_wid=5)
         self.center_wall.color("light green")
         self.center_wall.penup()
 
         self.left_wall = turtle.RawTurtle(self.screen, shape="square")
         self.left_wall.hideturtle()
-        self.left_wall.shapesize(stretch_len=1, stretch_wid=5)
+        self.left_wall.shapesize(stretch_len=3, stretch_wid=15)
         self.left_wall.color("saddle brown")
         self.left_wall.penup()
-        self.left_wall.setx(-450)
+        self.left_wall.setx(-450*2)
 
         self.right_wall = turtle.RawTurtle(self.screen, shape="square")
         self.right_wall.hideturtle()
-        self.right_wall.shapesize(stretch_len=1, stretch_wid=5)
+        self.right_wall.shapesize(stretch_len=3, stretch_wid=15)
         self.right_wall.color("saddle brown")
         self.right_wall.penup()
-        self.right_wall.setx(450)
+        self.right_wall.setx(450*2)
 
         self.left_wall_close = turtle.RawTurtle(self.screen, shape="square")
         self.left_wall_close.hideturtle()
-        self.left_wall_close.shapesize(stretch_len=1, stretch_wid=5)
+        self.left_wall_close.shapesize(stretch_len=3, stretch_wid=15)
         self.left_wall_close.color("saddle brown")
         self.left_wall_close.penup()
-        self.left_wall_close.setx(-225)
+        self.left_wall_close.setx(-225*2)
 
         self.right_wall_close = turtle.RawTurtle(self.screen, shape="square")
         self.right_wall_close.hideturtle()
-        self.right_wall_close.shapesize(stretch_len=1, stretch_wid=5)
+        self.right_wall_close.shapesize(stretch_len=3, stretch_wid=15)
         self.right_wall_close.color("saddle brown")
         self.right_wall_close.penup()
-        self.right_wall_close.setx(225)
+        self.right_wall_close.setx(225*2)
 
     # Top Level Window Functions
 
@@ -353,35 +353,35 @@ class PatientWindow:
     # function to update images for patient commands
     def stop_image(self):
         stop_img = Image.open("images/stop.gif")
-        stop_img_resized = stop_img.resize((600, 400), Image.Resampling.LANCZOS)
+        stop_img_resized = stop_img.resize((600*2, 400*2), Image.Resampling.LANCZOS)
         photo_img = ImageTk.PhotoImage(stop_img_resized)
         self.label.config(image=photo_img)
         self.label.image = photo_img
 
     def right_arrow(self):
         right_img = Image.open("images/right-arrow.gif")
-        right_img_resized = right_img.resize((600, 400), Image.Resampling.LANCZOS)
+        right_img_resized = right_img.resize((600*2, 400*2), Image.Resampling.LANCZOS)
         photo_img = ImageTk.PhotoImage(right_img_resized)
         self.label.config(image=photo_img)
         self.label.image = photo_img
 
     def left_arrow(self):
         left_img = Image.open("images/left-arrow.gif")
-        left_img_resized = left_img.resize((600, 400), Image.Resampling.LANCZOS)
+        left_img_resized = left_img.resize((600*2, 400*2), Image.Resampling.LANCZOS)
         photo_img = ImageTk.PhotoImage(left_img_resized)
         self.label.config(image=photo_img)
         self.label.image = photo_img
 
     def please_wait(self):
         wait_img = Image.open("images/please-wait.png")
-        wait_img_resized = wait_img.resize((600, 400), Image.Resampling.LANCZOS)
+        wait_img_resized = wait_img.resize((600*2, 400*2), Image.Resampling.LANCZOS)
         photo_img = ImageTk.PhotoImage(wait_img_resized)
         self.label.config(image=photo_img)
         self.label.image = photo_img
 
     def good_job_img(self):
         good_img = Image.open("images/good_job.jpg")
-        good_img_resized = good_img.resize((600, 400), Image.Resampling.LANCZOS)
+        good_img_resized = good_img.resize((600*2, 400*2), Image.Resampling.LANCZOS)
         photo_img = ImageTk.PhotoImage(good_img_resized)
         self.label.config(image=photo_img)
         self.label.image = photo_img
