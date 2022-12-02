@@ -22,7 +22,7 @@ class RootWindow:
     def __init__(self, master):
         self.patientWindow = PatientWindow()  # opens patient window
         self.arduino_data = PythonArduino()  # pull in arduino data object
-
+        self.position = None
         # left frame
         self.frame_left = customtkinter.CTkFrame(master)
 
@@ -108,14 +108,52 @@ class RootWindow:
         # need delay or wait till command between each left/right command
         # time.sleep(1)
         self.go_close_left()
-        self.go_far_left()
-        self.go_close_left()
-        self.go_to_center()
-        self.go_close_right()
-        self.go_far_right()
-        self.go_close_right()
-        self.go_to_center()
+        if self.position == 'at left1 position':
+            self.go_far_left()
+        else:
+            self.stop_trial()
+        if self.position == 'at left2 position':
+            self.go_close_left()
+        else:
+            self.stop_trial()
+        if self.position == 'at left1 position':
+            self.go_to_center()
+        else:
+            self.stop_trial()
+        if self.position == 'at home position':
+            self.go_close_right()
+        else:
+            self.stop_trial()
+
+        if self.position == 'at right1 position':
+            self.go_far_right()
+        else:
+            self.stop_trial()
+
+        if self.position == 'at right2 position':
+            self.go_close_right()
+        else:
+            self.stop_trial()
+
+        if self.position == 'at right1 position':
+            self.go_to_center()
+        else:
+            self.stop_trial()
+
         self.patientWindow.good_job_img()
+
+
+
+
+        # self.go_close_left()
+        # self.go_far_left()
+        # self.go_close_left()
+        # self.go_to_center()
+        # self.go_close_right()
+        # self.go_far_right()
+        # self.go_close_right()
+        # self.go_to_center()
+        # self.patientWindow.good_job_img()
 
         print("Trial Done")
 
@@ -126,13 +164,13 @@ class RootWindow:
     def update_speed(self, speed):
         if self.speed_var.get() == "Slow":
             self.patientWindow.user_turtle.speed(1)
-            self.patientWindow.screen.delay(60)
+            self.patientWindow.screen.delay(32)
         if self.speed_var.get() == "Medium":
             self.patientWindow.user_turtle.speed(1)
             self.patientWindow.screen.delay(100)
         if self.speed_var.get() == "Fast":
             self.patientWindow.user_turtle.speed(1)
-            self.patientWindow.screen.delay(30)
+            self.patientWindow.screen.delay(17)
         print(self.speed_var.get())
 
     def set_heading(self, direction):
@@ -144,10 +182,10 @@ class RootWindow:
     def go_to_center(self):
         if self.speed_var.get() == "Slow":
             self.arduino_data.send_data(f"00")
-            time.sleep(1)
+            time.sleep(1*.5)
         else:
             self.arduino_data.send_data(f"01")
-            time.sleep(1)
+            time.sleep(1*.5)
         self.patientWindow.show_center_wall()
         if self.patientWindow.user_turtle.xcor() < 1:
             self.patientWindow.right_arrow()
@@ -156,14 +194,16 @@ class RootWindow:
             self.patientWindow.left_arrow()
             self.set_heading(180)
         self.patientWindow.user_turtle.goto((0, 0))
+        self.position = self.arduino_data.receive_data()
+        print(self.position)
 
     def go_close_left(self):
         if self.speed_var.get() == "Slow":
             self.arduino_data.send_data(f"10")
-            time.sleep(1)
+            time.sleep(1*.5)
         else:
             self.arduino_data.send_data(f"11")
-            time.sleep(1)
+            time.sleep(1*.5)
         self.patientWindow.show_left_wall_close()
         if self.patientWindow.user_turtle.xcor() > -225*2:
             self.patientWindow.left_arrow()
@@ -172,14 +212,16 @@ class RootWindow:
             self.patientWindow.right_arrow()
             self.set_heading(0)
         self.patientWindow.user_turtle.goto(CLOSE_LEFT)
+        self.position = self.arduino_data.receive_data()
+        print(self.position)
 
     def go_close_right(self):
         if self.speed_var.get() == "Slow":
             self.arduino_data.send_data(f"30")
-            time.sleep(1)
+            time.sleep(1*.5)
         else:
             self.arduino_data.send_data(f"31")
-            time.sleep(1)
+            time.sleep(1*.5)
         self.patientWindow.show_right_wall_close()
         if self.patientWindow.user_turtle.xcor() < 225*2:
             self.patientWindow.right_arrow()
@@ -188,30 +230,39 @@ class RootWindow:
             self.patientWindow.left_arrow()
             self.set_heading(180)
         self.patientWindow.user_turtle.goto(CLOSE_RIGHT)
+        self.position = self.arduino_data.receive_data()
+        print(self.position)
+
 
     def go_far_left(self):
         if self.speed_var.get() == "Slow":
             self.arduino_data.send_data(f"20")
-            time.sleep(1)
+            time.sleep(1*.5)
         else:
             self.arduino_data.send_data(f"21")
-            time.sleep(1)
+            time.sleep(1*.5)
         self.patientWindow.show_left_wall()
         self.patientWindow.left_arrow()
         self.set_heading(180)
         self.patientWindow.user_turtle.goto(LEFT)
+        self.position = self.arduino_data.receive_data()
+        print(self.position)
+
 
     def go_far_right(self):
         if self.speed_var.get() == "Slow":
             self.arduino_data.send_data(f"40")
-            time.sleep(1)
+            time.sleep(1*.5)
         else:
             self.arduino_data.send_data(f"41")
-            time.sleep(1)
+            time.sleep(1*.5)
         self.patientWindow.show_right_wall()
         self.patientWindow.right_arrow()
         self.set_heading(0)
         self.patientWindow.user_turtle.goto(RIGHT)
+        self.position = self.arduino_data.receive_data()
+        print(self.position)
+
 
     def calibrate(self):
         self.arduino_data.send_data("01")
@@ -220,6 +271,9 @@ class RootWindow:
         self.patientWindow.hide_all_walls()
         self.patientWindow.user_turtle.speed(10)
         self.patientWindow.user_turtle.home()
+        self.position = self.arduino_data.receive_data()
+        print(self.position)
+
 
 
 
