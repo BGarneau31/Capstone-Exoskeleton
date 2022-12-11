@@ -1,9 +1,8 @@
 import time
 import serial
 
-
 arduino = serial.Serial(port='COM5', baudrate=115200, timeout=1)  # update port and baudrate
-# time.sleep(1)
+
 
 class PythonArduino:
 
@@ -22,7 +21,6 @@ class PythonArduino:
         data_from_python = python_data
         arduino.write(data_from_python.encode())
         print(data_from_python)
-
 
 # Fake data for testing GUI without arduino connection:
 
