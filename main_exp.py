@@ -7,6 +7,8 @@ from customtkinter import *
 import turtle
 from PythonArduino import PythonArduino
 
+# calibrate function then run trial creates issue that closes GUI? - next semester issue
+
 customtkinter.set_appearance_mode("system")  # Modes: system (default), light, dark
 customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
 LEFT = (-450*2, 0)
@@ -142,9 +144,6 @@ class RootWindow:
 
         self.patientWindow.good_job_img()
 
-
-
-
         # self.go_close_left()
         # self.go_far_left()
         # self.go_close_left()
@@ -233,7 +232,6 @@ class RootWindow:
         self.position = self.arduino_data.receive_data()
         print(self.position)
 
-
     def go_far_left(self):
         if self.speed_var.get() == "Slow":
             self.arduino_data.send_data(f"20")
@@ -247,7 +245,6 @@ class RootWindow:
         self.patientWindow.user_turtle.goto(LEFT)
         self.position = self.arduino_data.receive_data()
         print(self.position)
-
 
     def go_far_right(self):
         if self.speed_var.get() == "Slow":
@@ -263,7 +260,6 @@ class RootWindow:
         self.position = self.arduino_data.receive_data()
         print(self.position)
 
-
     def calibrate(self):
         self.arduino_data.send_data("01")
         # time.sleep(5)
@@ -273,8 +269,6 @@ class RootWindow:
         self.patientWindow.user_turtle.home()
         self.position = self.arduino_data.receive_data()
         print(self.position)
-
-
 
 
 class PatientWindow:
