@@ -115,16 +115,23 @@ class RootWindow:
         close_glove_but = customtkinter.CTkButton(self.frame_3, text="Close Glove Window", command=self.close_glove_window)
         close_glove_but.grid(row=0, column=1, columnspan=1, padx=10, pady=10)
 
-        self.run_glove_trial = customtkinter.CTkButton(self.frame_3, text="Run Trial", command=self.run_trial, fg_color="green")
+        open_hand_but = customtkinter.CTkButton(self.frame_3, text="Open Hand", command=self.open_glove)
+        open_hand_but.grid(row=1, column=0, columnspan=1, padx=10, pady=10)
+
+        close_hand_but = customtkinter.CTkButton(self.frame_3, text="Close Hand",command=self.close_glove)
+        close_hand_but.grid(row=1, column=1, columnspan=1, padx=10, pady=10)
+
+        self.run_glove_trial = customtkinter.CTkButton(self.frame_3, text="Run Trial", command=self.run_glove_trial, fg_color="green")
         self.run_glove_trial.grid(row=2, column=0, columnspan=1, padx=10, pady=10)
 
-        stop_glove = customtkinter.CTkButton(self.frame_3, text="Stop Trial", command=self.stop_trial, fg_color="red")
+        stop_glove = customtkinter.CTkButton(self.frame_3, text="Stop Trial", command=self.stop_glove_trial, fg_color="red")
         stop_glove.grid(padx=10, pady=10, row=2, column=1, columnspan=1)
 
         self.frame_3.grid(padx=20, pady=50, row=0, column=2)
 
-    # Root Window Functions
+    # Root Window Functions (Glove, Planar)
 
+    # Glove Functions
     def open_planar_exo_window(self):
         self.sub_window = PlanarWindowCreation()
         print("Planar Window Created")
@@ -141,6 +148,29 @@ class RootWindow:
         self.sub_window2.close_window()  # need the whole window to load and print out "created" statement before closing
         print("Glove Window Closed")
 
+    def open_glove(self):
+        self.sub_window2.open_hand_image()
+
+    def close_glove(self):
+        self.sub_window2.close_hand_image()
+
+    def run_glove_trial(self):
+        self.sub_window2.open_hand_image()
+
+        self.sub_window2.close_hand_image()
+
+        self.sub_window2.open_hand_image()
+
+        self.sub_window2.close_hand_image()
+
+        self.sub_window2.open_hand_image()
+
+        self.sub_window2.good_job_img()
+
+    def stop_glove_trial(self):
+        pass
+    # Data recording functions
+
     def update_user_data(self):
         # update csv file with user number and trial num
         # uses .get() with entry text variables
@@ -155,6 +185,8 @@ class RootWindow:
     def record_data(self):
         # update bool value to update "data collection" function that will take some type of data
         pass
+
+    # Planar system functions
 
     def run_trial(self):
         pass

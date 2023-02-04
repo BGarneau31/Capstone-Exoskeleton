@@ -9,9 +9,9 @@ import turtle
 from PIL import Image, ImageTk
 
 
-class PlanarWindowCreation(CTkToplevel):
+class PlanarWindowCreation():
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         self.top = CTkToplevel()
         self.top.geometry("%dx%d+%d+%d" % (1050, 900, 0, 0))
         self.top.title("Exo Planar Window")
@@ -83,12 +83,44 @@ class PlanarWindowCreation(CTkToplevel):
         self.top.destroy()
 
 
-class GloveWindowCreation(CTkToplevel):
+class GloveWindowCreation():
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         self.top2 = CTkToplevel()
         self.top2.geometry("%dx%d+%d+%d" % (500, 500, 0, 0))
         self.top2.title("Exo Glove Window")
+
+        self.canvas = Canvas(self.top2, width=500, height=500, bg='gray', highlightthickness=0)
+        self.canvas.grid(row=0, column=0)
+
+        im = Image.open("images/please-wait2.png")
+        resized = im.resize((500, 500), Image.Resampling.LANCZOS)
+        ph = ImageTk.PhotoImage(resized)
+
+        self.label = Label(self.canvas, image=ph, width=500, height=500, borderwidth=0)
+        self.label.image = ph  # need to keep the reference of your image to avoid garbage collection
+        self.label.grid(row=1, column=0)
+
+    def open_hand_image(self):
+        good_img = Image.open("images/open_hand.jpg")
+        good_img_resized = good_img.resize((500,500), Image.Resampling.LANCZOS)
+        photo_img = ImageTk.PhotoImage(good_img_resized)
+        self.label.config(image=photo_img)
+        self.label.image = photo_img
+
+    def close_hand_image(self):
+        good_img = Image.open("images/close_hand.jpg")
+        good_img_resized = good_img.resize((500,500), Image.Resampling.LANCZOS)
+        photo_img = ImageTk.PhotoImage(good_img_resized)
+        self.label.config(image=photo_img)
+        self.label.image = photo_img
+
+    def good_job_img(self):
+        good_img = Image.open("images/good_job.jpg")
+        good_img_resized = good_img.resize((500, 500), Image.Resampling.LANCZOS)
+        photo_img = ImageTk.PhotoImage(good_img_resized)
+        self.label.config(image=photo_img)
+        self.label.image = photo_img
 
     def close_window(self):
         self.top2.destroy()
