@@ -1,7 +1,7 @@
 import time
 import serial
 
-arduino = serial.Serial(port='COM5', baudrate=115200, timeout=1)  # update port and baudrate
+arduino = serial.Serial(port='COM5', baudrate=115200, timeout=1)  # update port to your port to run
 
 
 class PythonArduino:

@@ -7,11 +7,10 @@ from customtkinter import *
 import turtle
 from PythonArduino import PythonArduino
 
-# calibrate function then run trial creates issue that closes GUI? - next semester issue
 
 customtkinter.set_appearance_mode("system")  # Modes: system (default), light, dark
 customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
-LEFT = (-450*2, 0)
+LEFT = (-450*2, 0)  # modify these numbers for GUI size/display
 RIGHT = (450*2, 0)
 CLOSE_LEFT = (-225*2, 0)
 CLOSE_RIGHT = (225*2, 0)
@@ -23,7 +22,7 @@ class RootWindow:
 
     def __init__(self, master):
         self.patientWindow = PatientWindow()  # opens patient window
-        self.arduino_data = PythonArduino()  # pull in arduino data object
+        self.arduino_data = PythonArduino()  # pull in arduino data object - ** arduino must be connected for this to run/ the file to run
         self.position = None
         # left frame
         self.frame_left = customtkinter.CTkFrame(master)
@@ -160,7 +159,7 @@ class RootWindow:
         self.arduino_data.send_data("stop")  # will need to update this with actual code command to send to kill the motor
         self.patientWindow.destroy_patient_window()
 
-    def update_speed(self, speed):
+    def update_speed(self, speed):  # need to modify these delays for large screen demo so GUI and planar position is syned
         if self.speed_var.get() == "Slow":
             self.patientWindow.user_turtle.speed(1)
             self.patientWindow.screen.delay(32)
@@ -204,7 +203,7 @@ class RootWindow:
             self.arduino_data.send_data(f"11")
             time.sleep(1*.5)
         self.patientWindow.show_left_wall_close()
-        if self.patientWindow.user_turtle.xcor() > -225*2:
+        if self.patientWindow.user_turtle.xcor() > -225*2:  # this number / 2 when not on large display
             self.patientWindow.left_arrow()
             self.set_heading(180)
         else:
@@ -214,7 +213,7 @@ class RootWindow:
         self.position = self.arduino_data.receive_data()
         print(self.position)
 
-    def go_close_right(self):
+    def go_close_right(self):  # modify the time.sleep amount when not on large display
         if self.speed_var.get() == "Slow":
             self.arduino_data.send_data(f"30")
             time.sleep(1*.5)
@@ -275,11 +274,11 @@ class PatientWindow:
     def __init__(self):
 
         self.top = customtkinter.CTkToplevel()
-        self.top.geometry("%dx%d+%d+%d" % (700, 625, 2700, 50))  # old was 1050, 900, 2350, 50
+        self.top.geometry("%dx%d+%d+%d" % (700, 625, 2700, 50))  # old was 1050, 900, 2350, 50 (modified for demo on large screen)
         self.top.title("Exoskeleton Patient View")
 
         # Top Frame
-        w = 1050*2
+        w = 1050*2  # multiplied by 2 for large display screen ( as well as any other number "*2"
         h = 450*2
 
         self.frame_top = customtkinter.CTkFrame(self.top)
