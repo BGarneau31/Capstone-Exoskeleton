@@ -87,7 +87,7 @@ class GloveWindowCreation():
 
     def __init__(self, *args, **kwargs):
         self.top2 = CTkToplevel()
-        self.top2.geometry("%dx%d+%d+%d" % (500, 500, 0, 0))
+        self.top2.geometry("%dx%d+%d+%d" % (500, 500, 100, 100))
         self.top2.title("Exo Glove Window")
 
         self.canvas = Canvas(self.top2, width=500, height=500, bg='gray', highlightthickness=0)
@@ -126,6 +126,36 @@ class GloveWindowCreation():
         self.top2.destroy()
 
 
+class ActiveControlGUI():
 
+    def __init__(self, *args, **kwargs):
+        self.top3 = CTkToplevel()
+        self.top3.geometry("%dx%d+%d+%d" % (800, 500, 100, 100))
+        self.top3.title("Active Control Window")
+
+        self.canvas = Canvas(self.top3, width=800, height=500, bg='gray', highlightthickness=0)
+        self.canvas.grid(row=0, column=0)
+
+        im = Image.open("images/please-wait2.png")
+        resized = im.resize((800, 500), Image.Resampling.LANCZOS)
+        ph = ImageTk.PhotoImage(resized)
+
+        self.label = Label(self.canvas, image=ph, width=800, height=500, borderwidth=0)
+        self.label.image = ph  # need to keep the reference of your image to avoid garbage collection
+        self.label.grid(row=1, column=0)
+
+    def left(self):
+        good_img = Image.open("images/green left arrow.png.jpg")
+        good_img_resized = good_img.resize((800,500), Image.Resampling.LANCZOS)
+        photo_img = ImageTk.PhotoImage(good_img_resized)
+        self.label.config(image=photo_img)
+        self.label.image = photo_img
+
+    def right(self):
+        good_img = Image.open("images/green right arrow.png.jpg")
+        good_img_resized = good_img.resize((800,500), Image.Resampling.LANCZOS)
+        photo_img = ImageTk.PhotoImage(good_img_resized)
+        self.label.config(image=photo_img)
+        self.label.image = photo_img
 
 
