@@ -1,4 +1,4 @@
-# GUIs to be run for testing when arduino is no connected
+# GUIs to be run for testing when arduino is not connected (need to use fake arduino function and disable arduino connection)
 
 import csv
 import time
