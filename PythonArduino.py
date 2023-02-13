@@ -14,12 +14,14 @@ import serial
 #     def receive_data(self):
 #         # read arduino data
 #         # return data as string to print to console to show tech that motor is finished with command and in position
-#         if self.tech_mode == True:
-#             while 1:
-#                 reading = arduino.read()  # change timeout value
+#         if self.tech_mode:
+#             timeout_val = None
 #         else:
-#             self.position_data = arduino.readline()  # end bit get rid of new line arduino characters
-#             return self.position_data.decode('utf-8')
+#             timeout_val = 1
+#
+#         arduino = serial.Serial(port='COM5', baudrate=115200, timeout=timeout_val)  # update port to your port to run
+#         self.position_data = arduino.readline()  # end bit get rid of new line arduino characters
+#         return self.position_data.decode('utf-8')
 #
 #     def send_data(self, python_data):
 #         # send arduino data command

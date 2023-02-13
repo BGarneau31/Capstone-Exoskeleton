@@ -392,7 +392,8 @@ class RootWindow:
         self.sub_window3.right()
 
     def active_stop(self):
-        self.sub_window3.stop()
+        if self.position == 'at right2 position' or self.position == 'at right2 position':
+            self.sub_window3.stop()
 
 
 if __name__ == "__main__":
