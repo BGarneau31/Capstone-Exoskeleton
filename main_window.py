@@ -29,7 +29,7 @@ class RootWindow:
 
     def __init__(self, master):
         # self.patientWindow = PatientWindow()  # opens patient window
-        self.arduino_data = PythonArduino()  # pull in arduino data object
+        # self.arduino_data = PythonArduino()  # pull in arduino data object
         self.sub_window = None
         self.sub_window2 = None
         self.sub_window3 = None
@@ -187,7 +187,7 @@ class RootWindow:
 
     def enable_tech_mode(self):
         # self.arduino_data.send_data("Tech Mode arduino string here**")
-        self.arduino_data.tech_mode = True
+        # self.arduino_data.tech_mode = True
         print("Tech mode enabled")
 
     def enable_buttons(self):
@@ -304,7 +304,7 @@ class RootWindow:
     def active_right(self):
         pass
 
-    def active_left(self):
+    def active_stop(self):
         pass
 
 
