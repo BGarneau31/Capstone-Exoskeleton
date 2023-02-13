@@ -28,8 +28,7 @@ print("Current Time:", now)
 class RootWindow:
 
     def __init__(self, master):
-        # self.patientWindow = PatientWindow()  # opens patient window
-        # self.arduino_data = PythonArduino()  # pull in arduino data object
+        self.arduino_data = PythonArduino()  # pull in arduino data object
         self.sub_window = None
         self.sub_window2 = None
         self.sub_window3 = None
@@ -269,34 +268,122 @@ class RootWindow:
     # Planar system functions
 
     def run_trial(self):
-        pass
+        # need delay or wait till command between each left/right command
+        # time.sleep(1)
+        self.go_close_left()
+        self.go_far_left()
+        self.go_close_left()
+        self.go_to_center()
+        self.go_close_right()
+        self.go_far_right()
+        self.go_close_right()
+        self.go_to_center()
+        self.sub_window.good_job_img()
+
+        print("Trial Done")
 
     def stop_trial(self):
-        pass
+        self.arduino_data.send_data(
+            "stop")  # will need to update this with actual code command to send to kill the motor
+        self.sub_window.destroy_patient_window()
 
     def update_speed(self, speed):
-        pass
+        if self.speed_var.get() == "Slow":
+            self.sub_window.user_turtle.speed(1)
+            self.sub_window.screen.delay(60)
+        if self.speed_var.get() == "Medium":
+            self.sub_window.user_turtle.speed(1)
+            self.sub_window.screen.delay(100)
+        if self.speed_var.get() == "Fast":
+            self.sub_window.user_turtle.speed(1)
+            self.sub_window.screen.delay(30)
+        print(self.speed_var.get())
 
     def set_heading(self, direction):
-        pass
+        self.sub_window.user_turtle.speed(10)
+        self.sub_window.screen.delay(0)
+        self.sub_window.user_turtle.setheading(direction)
+        self.update_speed(self.speed_var.get())
 
     def go_to_center(self):
-        pass
+        if self.speed_var.get() == "Slow":
+            self.arduino_data.send_data(f"00")
+            time.sleep(1)
+        else:
+            self.arduino_data.send_data(f"01")
+            time.sleep(1)
+        self.sub_window.show_center_wall()
+        if self.sub_window.user_turtle.xcor() < 1:
+            self.sub_window.right_arrow()
+            self.set_heading(0)
+        if self.sub_window.user_turtle.xcor() > 1:
+            self.sub_window.left_arrow()
+            self.set_heading(180)
+        self.sub_window.user_turtle.goto((0, 0))
 
     def go_close_left(self):
-        pass
+        if self.speed_var.get() == "Slow":
+            self.arduino_data.send_data(f"10")
+            time.sleep(1)
+        else:
+            self.arduino_data.send_data(f"11")
+            time.sleep(1)
+        self.sub_window.show_left_wall_close()
+        if self.sub_window.user_turtle.xcor() > -225:
+            self.sub_window.left_arrow()
+            self.set_heading(180)
+        else:
+            self.sub_window.right_arrow()
+            self.set_heading(0)
+        self.sub_window.user_turtle.goto(CLOSE_LEFT)
 
     def go_close_right(self):
-        pass
+        if self.speed_var.get() == "Slow":
+            self.arduino_data.send_data(f"30")
+            time.sleep(1)
+        else:
+            self.arduino_data.send_data(f"31")
+            time.sleep(1)
+        self.sub_window.show_right_wall_close()
+        if self.sub_window.user_turtle.xcor() < 225:
+            self.sub_window.right_arrow()
+            self.set_heading(0)
+        else:
+            self.sub_window.left_arrow()
+            self.set_heading(180)
+        self.sub_window.user_turtle.goto(CLOSE_RIGHT)
 
     def go_far_left(self):
-        pass
+        if self.speed_var.get() == "Slow":
+            self.arduino_data.send_data(f"20")
+            time.sleep(1)
+        else:
+            self.arduino_data.send_data(f"21")
+            time.sleep(1)
+        self.sub_window.show_left_wall()
+        self.sub_window.left_arrow()
+        self.set_heading(180)
+        self.sub_window.user_turtle.goto(LEFT)
 
     def go_far_right(self):
-        pass
+        if self.speed_var.get() == "Slow":
+            self.arduino_data.send_data(f"40")
+            time.sleep(1)
+        else:
+            self.arduino_data.send_data(f"41")
+            time.sleep(1)
+        self.sub_window.show_right_wall()
+        self.sub_window.right_arrow()
+        self.set_heading(0)
+        self.sub_window.user_turtle.goto(RIGHT)
 
     def calibrate(self):
-        pass
+        self.arduino_data.send_data("01")
+        # time.sleep(5)
+        self.sub_window.please_wait()
+        self.sub_window.hide_all_walls()
+        self.sub_window.user_turtle.speed(10)
+        self.sub_window.user_turtle.home()
 
     def active_left(self):
         pass

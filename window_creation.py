@@ -79,6 +79,99 @@ class PlanarWindowCreation():
         self.right_wall_close.penup()
         self.right_wall_close.setx(225)
 
+    def show_right_wall(self):
+        self.center_wall.hideturtle()
+        self.left_wall.hideturtle()
+        self.right_wall_close.hideturtle()
+        self.left_wall_close.hideturtle()
+        self.right_wall.showturtle()
+
+    def show_right_wall_close(self):
+        self.center_wall.hideturtle()
+        self.left_wall.hideturtle()
+        self.left_wall_close.hideturtle()
+        self.right_wall.hideturtle()
+        self.right_wall_close.showturtle()
+
+    def show_left_wall(self):
+        self.right_wall.hideturtle()
+        self.center_wall.hideturtle()
+        self.right_wall_close.hideturtle()
+        self.left_wall_close.hideturtle()
+        self.left_wall.showturtle()
+
+    def show_left_wall_close(self):
+        self.center_wall.hideturtle()
+        self.left_wall.hideturtle()
+        self.right_wall_close.hideturtle()
+        self.right_wall.hideturtle()
+        self.left_wall_close.showturtle()
+
+    def show_center_wall(self):
+        self.right_wall.hideturtle()
+        self.left_wall.hideturtle()
+        self.left_wall_close.hideturtle()
+        self.right_wall_close.hideturtle()
+        self.center_wall.showturtle()
+
+    def hide_all_walls(self):
+        self.right_wall.hideturtle()
+        self.left_wall.hideturtle()
+        self.left_wall_close.hideturtle()
+        self.right_wall_close.hideturtle()
+        self.center_wall.hideturtle()
+
+        # function to update speed of turtle object
+
+    def set_turtle_speed(self, speed):
+        # take in info related to selected GUI speed and call function that sends data to arduino in PythonArduinoCode
+        if speed == "Slow":
+            self.user_turtle.speed(1)
+            self.screen.delay(300)
+        if speed == "Medium":
+            self.user_turtle.speed(1)
+            self.screen.delay(100)
+        if speed == "Fast":
+            self.user_turtle.speed(1)
+            self.screen.delay(30)
+
+        # function to update images for patient commands
+
+    def stop_image(self):
+        stop_img = Image.open("images/stop.gif")
+        stop_img_resized = stop_img.resize((600, 400), Image.Resampling.LANCZOS)
+        photo_img = ImageTk.PhotoImage(stop_img_resized)
+        self.label.config(image=photo_img)
+        self.label.image = photo_img
+
+    def right_arrow(self):
+        right_img = Image.open("images/green right arrow.png")
+        right_img_resized = right_img.resize((600, 400), Image.Resampling.LANCZOS)
+        photo_img = ImageTk.PhotoImage(right_img_resized)
+        self.label.config(image=photo_img)
+        self.label.image = photo_img
+
+    def left_arrow(self):
+        left_img = Image.open("images/green left arrow.png")
+        left_img_resized = left_img.resize((600, 400), Image.Resampling.LANCZOS)
+        photo_img = ImageTk.PhotoImage(left_img_resized)
+        self.label.config(image=photo_img)
+        self.label.image = photo_img
+
+    def please_wait(self):
+        wait_img = Image.open("images/please-wait.png")
+        wait_img_resized = wait_img.resize((600, 400), Image.Resampling.LANCZOS)
+        photo_img = ImageTk.PhotoImage(wait_img_resized)
+        self.label.config(image=photo_img)
+        self.label.image = photo_img
+
+    def good_job_img(self):
+        good_img = Image.open("images/good_job.jpg")
+        good_img_resized = good_img.resize((600, 400), Image.Resampling.LANCZOS)
+        photo_img = ImageTk.PhotoImage(good_img_resized)
+        self.label.config(image=photo_img)
+        self.label.image = photo_img
+
     def close_window(self):
         self.top.destroy()
 
