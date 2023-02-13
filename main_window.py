@@ -209,6 +209,10 @@ class RootWindow:
 
     def open_active_window(self):
         self.sub_window3 = ActiveControlGUI()
+        while 1:
+            self.arduino_data.receive_data()
+            if self.position == 'at right2 position' or self.position == 'at right2 position':
+                self.sub_window3.stop()
         print("Active Control Window Open")
 
     def update_user_data(self):
