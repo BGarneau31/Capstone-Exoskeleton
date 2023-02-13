@@ -35,6 +35,7 @@ class PythonArduino:
 
     def __init__(self):
         self.position_data = None
+        self.tech_mode = True
 
     def receive_data(self):
         return 1
