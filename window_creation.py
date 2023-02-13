@@ -238,16 +238,23 @@ class ActiveControlGUI():
         self.label.grid(row=1, column=0)
 
     def left(self):
-        good_img = Image.open("images/green left arrow.png.jpg")
+        good_img = Image.open("images/green left arrow.png")
         good_img_resized = good_img.resize((800,500), Image.Resampling.LANCZOS)
         photo_img = ImageTk.PhotoImage(good_img_resized)
         self.label.config(image=photo_img)
         self.label.image = photo_img
 
     def right(self):
-        good_img = Image.open("images/green right arrow.png.jpg")
+        good_img = Image.open("images/green right arrow.png")
         good_img_resized = good_img.resize((800,500), Image.Resampling.LANCZOS)
         photo_img = ImageTk.PhotoImage(good_img_resized)
+        self.label.config(image=photo_img)
+        self.label.image = photo_img
+
+    def stop(self):
+        stop_img = Image.open("images/stop.gif")
+        stop_img_resized = stop_img.resize((600, 400), Image.Resampling.LANCZOS)
+        photo_img = ImageTk.PhotoImage(stop_img_resized)
         self.label.config(image=photo_img)
         self.label.image = photo_img
 

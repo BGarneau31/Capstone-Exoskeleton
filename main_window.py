@@ -386,13 +386,13 @@ class RootWindow:
         self.sub_window.user_turtle.home()
 
     def active_left(self):
-        pass
+        self.sub_window3.left()
 
     def active_right(self):
-        pass
+        self.sub_window3.right()
 
     def active_stop(self):
-        pass
+        self.sub_window3.stop()
 
 
 if __name__ == "__main__":
