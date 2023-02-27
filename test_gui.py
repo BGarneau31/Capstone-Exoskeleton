@@ -10,10 +10,10 @@ from PythonArduino import PythonArduino
 
 customtkinter.set_appearance_mode("system")  # Modes: system (default), light, dark
 customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
-LEFT = (-450*2, 0)  # modify these numbers for GUI size/display
-RIGHT = (450*2, 0)
-CLOSE_LEFT = (-225*2, 0)
-CLOSE_RIGHT = (225*2, 0)
+LEFT = (-450, 0)  # modify these numbers for GUI size/display
+RIGHT = (450, 0)
+CLOSE_LEFT = (-225, 0)
+CLOSE_RIGHT = (225, 0)
 now = time.ctime()
 print("Current Time:", now)
 
@@ -108,41 +108,39 @@ class RootWindow:
     def run_trial(self):
         # need delay or wait till command between each left/right command
         # time.sleep(1)
-        tic = time.perf_counter()
         self.go_close_left()
-        if self.position == 1:
+        if self.position == 'at left1 position':
             self.go_far_left()
         else:
             self.stop_trial()
-        if self.position == 1:
+        if self.position == 'at left2 position':
             self.go_close_left()
         else:
             self.stop_trial()
-        if self.position == 1:
+        if self.position == 'at left1 position':
             self.go_to_center()
         else:
             self.stop_trial()
-        if self.position == 1:
+        if self.position == 'at home position':
             self.go_close_right()
         else:
             self.stop_trial()
 
-        if self.position == 1:
+        if self.position == 'at right1 position':
             self.go_far_right()
         else:
             self.stop_trial()
 
-        if self.position == 1:
+        if self.position == 'at right2 position':
             self.go_close_right()
         else:
             self.stop_trial()
 
-        if self.position == 1:
+        if self.position == 'at right1 position':
             self.go_to_center()
         else:
             self.stop_trial()
-        toc = time.perf_counter()
-        print(f"{toc - tic:0.4f} seconds")
+
         self.patientWindow.good_job_img()
 
         # self.go_close_left()
@@ -198,7 +196,6 @@ class RootWindow:
         print(self.position)
 
     def go_close_left(self):
-        tic = time.perf_counter()
         if self.speed_var.get() == "Slow":
             self.arduino_data.send_data(f"10")
             time.sleep(1*.5)
@@ -206,15 +203,13 @@ class RootWindow:
             self.arduino_data.send_data(f"11")
             time.sleep(1*.5)
         self.patientWindow.show_left_wall_close()
-        if self.patientWindow.user_turtle.xcor() > -225*2:  # this number / 2 when not on large display
+        if self.patientWindow.user_turtle.xcor() > -225:  # this number / 2 when not on large display
             self.patientWindow.left_arrow()
             self.set_heading(180)
         else:
             self.patientWindow.right_arrow()
             self.set_heading(0)
         self.patientWindow.user_turtle.goto(CLOSE_LEFT)
-        toc = time.perf_counter()
-        print(f"{toc - tic:0.4f} seconds")
         self.position = self.arduino_data.receive_data()
         print(self.position)
 
@@ -228,7 +223,7 @@ class RootWindow:
             self.arduino_data.send_data(f"31")
             time.sleep(1*.5)
         self.patientWindow.show_right_wall_close()
-        if self.patientWindow.user_turtle.xcor() < 225*2:
+        if self.patientWindow.user_turtle.xcor() < 225:
             self.patientWindow.right_arrow()
             self.set_heading(0)
         else:
@@ -292,12 +287,12 @@ class PatientWindow:
     def __init__(self):
 
         self.top = customtkinter.CTkToplevel()
-        self.top.geometry("%dx%d+%d+%d" % (700, 625, 2700, 50))  # old was 1050, 900, 2350, 50 (modified for demo on large screen)
+        self.top.geometry("%dx%d+%d+%d" % (1050, 900, 0 ,0))  # old was 1050, 900, 2350, 50 (modified for demo on large screen)
         self.top.title("Exoskeleton Patient View")
 
         # Top Frame
-        w = 1050*2  # multiplied by 2 for large display screen ( as well as any other number "*2"
-        h = 450*2
+        w = 1050  # multiplied by 2 for large display screen ( as well as any other number "*2"
+        h = 450
 
         self.frame_top = customtkinter.CTkFrame(self.top)
         self.canvas = Canvas(self.frame_top, width=w, height=h, bg='gray')
@@ -308,10 +303,10 @@ class PatientWindow:
         self.frame_bottom = customtkinter.CTkFrame(self.top)
 
         im = Image.open("images/please-wait2.png")
-        resized = im.resize((600*2, 400*2), Image.Resampling.LANCZOS)
+        resized = im.resize((600, 400), Image.Resampling.LANCZOS)
         ph = ImageTk.PhotoImage(resized)
 
-        self.label = Label(self.frame_bottom, image=ph, width=600*2, height=400*2)
+        self.label = Label(self.frame_bottom, image=ph, width=600, height=400)
         self.label.image = ph  # need to keep the reference of your image to avoid garbage collection
         self.label.grid(row=1, column=0)
         self.frame_bottom.grid(row=1, column=0, pady=20)
@@ -320,43 +315,43 @@ class PatientWindow:
         self.screen = turtle.TurtleScreen(self.canvas)
         self.screen.bgcolor("cyan")
         self.user_turtle = turtle.RawTurtle(self.screen, shape='turtle')
-        self.user_turtle.shapesize(stretch_len=4, stretch_wid=4)
+        self.user_turtle.shapesize(stretch_len=2, stretch_wid=2)
         self.user_turtle.color("green")
         self.user_turtle.penup()
 
         self.center_wall = turtle.RawTurtle(self.screen, shape="circle")
         self.center_wall.hideturtle()
-        self.center_wall.shapesize(stretch_len=5, stretch_wid=5)
+        self.center_wall.shapesize(stretch_len=3, stretch_wid=3)
         self.center_wall.color("light green")
         self.center_wall.penup()
 
         self.left_wall = turtle.RawTurtle(self.screen, shape="square")
         self.left_wall.hideturtle()
-        self.left_wall.shapesize(stretch_len=3, stretch_wid=15)
+        self.left_wall.shapesize(stretch_len=1, stretch_wid=5)
         self.left_wall.color("saddle brown")
         self.left_wall.penup()
-        self.left_wall.setx(-450*2)
+        self.left_wall.setx(-450)
 
         self.right_wall = turtle.RawTurtle(self.screen, shape="square")
         self.right_wall.hideturtle()
-        self.right_wall.shapesize(stretch_len=3, stretch_wid=15)
+        self.right_wall.shapesize(stretch_len=1, stretch_wid=5)
         self.right_wall.color("saddle brown")
         self.right_wall.penup()
-        self.right_wall.setx(450*2)
+        self.right_wall.setx(450)
 
         self.left_wall_close = turtle.RawTurtle(self.screen, shape="square")
         self.left_wall_close.hideturtle()
-        self.left_wall_close.shapesize(stretch_len=3, stretch_wid=15)
+        self.left_wall_close.shapesize(stretch_len=1, stretch_wid=5)
         self.left_wall_close.color("saddle brown")
         self.left_wall_close.penup()
-        self.left_wall_close.setx(-225*2)
+        self.left_wall_close.setx(-225)
 
         self.right_wall_close = turtle.RawTurtle(self.screen, shape="square")
         self.right_wall_close.hideturtle()
-        self.right_wall_close.shapesize(stretch_len=3, stretch_wid=15)
+        self.right_wall_close.shapesize(stretch_len=1, stretch_wid=5)
         self.right_wall_close.color("saddle brown")
         self.right_wall_close.penup()
-        self.right_wall_close.setx(225*2)
+        self.right_wall_close.setx(225)
 
     # Top Level Window Functions
 
@@ -389,10 +384,10 @@ class PatientWindow:
         self.left_wall_close.showturtle()
 
     def show_center_wall(self):
-        self.right_wall.hideturtle()
-        self.left_wall.hideturtle()
-        self.left_wall_close.hideturtle()
-        self.right_wall_close.hideturtle()
+        self.right_wall.showturtle()
+        self.left_wall.showturtle()
+        self.left_wall_close.showturtle()
+        self.right_wall_close.showturtle()
         self.center_wall.showturtle()
 
     def hide_all_walls(self):
@@ -418,35 +413,35 @@ class PatientWindow:
     # function to update images for patient commands
     def stop_image(self):
         stop_img = Image.open("images/stop.gif")
-        stop_img_resized = stop_img.resize((600*2, 400*2), Image.Resampling.LANCZOS)
+        stop_img_resized = stop_img.resize((600, 400), Image.Resampling.LANCZOS)
         photo_img = ImageTk.PhotoImage(stop_img_resized)
         self.label.config(image=photo_img)
         self.label.image = photo_img
 
     def right_arrow(self):
         right_img = Image.open("images/green right arrow.png")
-        right_img_resized = right_img.resize((600*2, 400*2), Image.Resampling.LANCZOS)
+        right_img_resized = right_img.resize((600, 400), Image.Resampling.LANCZOS)
         photo_img = ImageTk.PhotoImage(right_img_resized)
         self.label.config(image=photo_img)
         self.label.image = photo_img
 
     def left_arrow(self):
         left_img = Image.open("images/green left arrow.png")
-        left_img_resized = left_img.resize((600*2, 400*2), Image.Resampling.LANCZOS)
+        left_img_resized = left_img.resize((600, 400), Image.Resampling.LANCZOS)
         photo_img = ImageTk.PhotoImage(left_img_resized)
         self.label.config(image=photo_img)
         self.label.image = photo_img
 
     def please_wait(self):
         wait_img = Image.open("images/please-wait.png")
-        wait_img_resized = wait_img.resize((600*2, 400*2), Image.Resampling.LANCZOS)
+        wait_img_resized = wait_img.resize((600, 400), Image.Resampling.LANCZOS)
         photo_img = ImageTk.PhotoImage(wait_img_resized)
         self.label.config(image=photo_img)
         self.label.image = photo_img
 
     def good_job_img(self):
         good_img = Image.open("images/good_job.jpg")
-        good_img_resized = good_img.resize((600*2, 400*2), Image.Resampling.LANCZOS)
+        good_img_resized = good_img.resize((600, 400), Image.Resampling.LANCZOS)
         photo_img = ImageTk.PhotoImage(good_img_resized)
         self.label.config(image=photo_img)
         self.label.image = photo_img
