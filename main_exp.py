@@ -214,6 +214,8 @@ class RootWindow:
         print(self.position)
 
     def go_close_right(self):  # modify the time.sleep amount when not on large display
+        tic = time.perf_counter()
+
         if self.speed_var.get() == "Slow":
             self.arduino_data.send_data(f"30")
             time.sleep(1*.5)
@@ -228,10 +230,14 @@ class RootWindow:
             self.patientWindow.left_arrow()
             self.set_heading(180)
         self.patientWindow.user_turtle.goto(CLOSE_RIGHT)
+        toc = time.perf_counter()
+        print(f"{toc - tic:0.4f} seconds")
         self.position = self.arduino_data.receive_data()
         print(self.position)
 
     def go_far_left(self):
+        tic = time.perf_counter()
+
         if self.speed_var.get() == "Slow":
             self.arduino_data.send_data(f"20")
             time.sleep(1*.5)
@@ -242,10 +248,14 @@ class RootWindow:
         self.patientWindow.left_arrow()
         self.set_heading(180)
         self.patientWindow.user_turtle.goto(LEFT)
+        toc = time.perf_counter()
+        print(f"{toc - tic:0.4f} seconds")
         self.position = self.arduino_data.receive_data()
         print(self.position)
 
     def go_far_right(self):
+        tic = time.perf_counter()
+
         if self.speed_var.get() == "Slow":
             self.arduino_data.send_data(f"40")
             time.sleep(1*.5)
@@ -256,8 +266,11 @@ class RootWindow:
         self.patientWindow.right_arrow()
         self.set_heading(0)
         self.patientWindow.user_turtle.goto(RIGHT)
+        toc = time.perf_counter()
+        print(f"{toc - tic:0.4f} seconds")
         self.position = self.arduino_data.receive_data()
         print(self.position)
+
 
     def calibrate(self):
         self.arduino_data.send_data("01")
