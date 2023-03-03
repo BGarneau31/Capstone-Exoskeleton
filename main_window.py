@@ -285,6 +285,41 @@ class RootWindow:
         self.go_to_center()
         self.sub_window.good_job_img()
 
+        # self.go_close_left()
+        # if self.position == "at left1 position":
+        #     self.go_far_left()
+        # else:
+        #     self.stop_trial()
+        # if self.position == "at left2 position"::
+        #     self.go_close_left()
+        # else:
+        #     self.stop_trial()
+        # if self.position == "at left1 position":
+        #     self.go_to_center()
+        # else:
+        #     self.stop_trial()
+        # if self.position == "at center position":
+        #     self.go_close_right()
+        # else:
+        #     self.stop_trial()
+        #
+        # if self.position == "at right1 position":
+        #     self.go_far_right()
+        # else:
+        #     self.stop_trial()
+        #
+        # if self.position == "at right2 position":
+        #     self.go_close_right()
+        # else:
+        #     self.stop_trial()
+        #
+        # if self.position == "at right1 position":
+        #     self.go_to_center()
+        # else:
+        #     self.stop_trial()
+        #
+        # self.sub_window.good_job_img()
+
         print("Trial Done")
 
     def stop_trial(self):
@@ -326,6 +361,9 @@ class RootWindow:
             self.set_heading(180)
         self.sub_window.user_turtle.goto((0, 0))
 
+        # self.position = self.arduino_data.receive_data()
+        # print(self.position)
+
     def go_close_left(self):
         if self.speed_var.get() == "Slow":
             self.arduino_data.send_data(f"10")
@@ -341,6 +379,9 @@ class RootWindow:
             self.sub_window.right_arrow()
             self.set_heading(0)
         self.sub_window.user_turtle.goto(CLOSE_LEFT)
+
+        # self.position = self.arduino_data.receive_data()
+        # print(self.position)
 
     def go_close_right(self):
 
@@ -362,6 +403,9 @@ class RootWindow:
         toc = time.perf_counter()
         print(f"{toc - tic:0.4f} seconds")
 
+        # self.position = self.arduino_data.receive_data()
+        # print(self.position)
+
 
     def go_far_left(self):
         tic = time.perf_counter()
@@ -382,6 +426,9 @@ class RootWindow:
         toc = time.perf_counter()
         print(f"{toc - tic:0.4f} seconds")
 
+        # self.position = self.arduino_data.receive_data()
+        # print(self.position)
+
     def go_far_right(self):
         tic = time.perf_counter()
 
@@ -399,6 +446,9 @@ class RootWindow:
         toc = time.perf_counter()
         print(f"{toc - tic:0.4f} seconds")
 
+        # self.position = self.arduino_data.receive_data()
+        # print(self.position)
+
     def calibrate(self):
         self.arduino_data.send_data("01")
         # time.sleep(5)
@@ -406,6 +456,9 @@ class RootWindow:
         self.sub_window.hide_all_walls()
         self.sub_window.user_turtle.speed(10)
         self.sub_window.user_turtle.home()
+
+        # self.position = self.arduino_data.receive_data()
+        # print(self.position)
 
     def active_left(self):
         self.sub_window3.left()
