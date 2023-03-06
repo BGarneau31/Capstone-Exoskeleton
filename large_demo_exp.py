@@ -1,3 +1,5 @@
+# this file is to be used as the basic demo for large double screen. No active user controls or glove instructions in this file.
+
 import csv
 import time
 from tkinter import *
