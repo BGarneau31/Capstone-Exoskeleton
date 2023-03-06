@@ -152,7 +152,7 @@ class RootWindow:
                                                   fg_color="red")
         self.stop_glove.grid(padx=10, pady=10, row=3, column=1, columnspan=1)
 
-        self.frame_3.grid(padx=20, pady=50, row=0, column=2)
+        self.frame_3.grid(padx=20, pady=50, row=0, column=3)
 
         self.frame_4 = customtkinter.CTkFrame(master)
 
@@ -178,7 +178,7 @@ class RootWindow:
 
 
 
-        self.frame_4.grid(padx=20, pady=50, row=0, column=3)
+        self.frame_4.grid(padx=20, pady=50, row=0, column=2)
 
     # Root Window Functions (Glove, Planar)
 
