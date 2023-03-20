@@ -294,7 +294,7 @@ class RootWindow:
 
     def run_trial(self):
         # need delay or wait till command between each left/right command
-        # time.sleep(1)
+        # time.sleep(1) -- dont use time.sleep use root.after(time, func)
         self.go_close_left()
         self.go_far_left()
         self.go_close_left()
