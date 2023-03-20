@@ -28,6 +28,12 @@ import serial
 #         data_from_python = python_data
 #         arduino.write(data_from_python.encode())
 #         print(data_from_python)
+#
+#     def enter_user_mode(self):
+#         arduino.write('user mode')
+
+#     def enter_tech_mode(self):
+#         arduino.write('tech mode')
 
 # Fake data for testing GUI without arduino connection:
 
@@ -44,3 +50,9 @@ class PythonArduino:
         # send arduino data command
         data_from_python = python_data
         print(data_from_python)
+
+    def enter_user_mode(self):
+        print("Sending user mode comment to Arduino")
+
+    def enter_tech_mode(self):
+        print("Sending tech mode comment to Arduino")

@@ -1,5 +1,6 @@
 import csv
 import time
+import tkinter
 from tkinter import *
 from PIL import Image, ImageTk
 import customtkinter
@@ -62,10 +63,16 @@ class RootWindow:
                                                  state='normal', command=self.update_speed)
         speed_slider.grid(row=6, column=0, columnspan=2, padx=10, pady=20)
 
-        self.enable_tech_but = customtkinter.CTkButton(self.frame_1, text="Enable Tech Mode",
-                                                       command=lambda: [self.enable_tech_mode(), self.enable_buttons()],
+        self.enable_user_but = customtkinter.CTkButton(self.frame_1, text="Enable User Mode",
+                                                       command=lambda: [self.enable_user_mode(), self.disable_buttons()],
                                                        fg_color="green")
-        self.enable_tech_but.grid(row=7, column=0, columnspan=2, padx=10, pady=20)
+
+        self.enable_user_but.grid(row=7, column=0, columnspan=1, padx=10, pady=20)
+
+        self.enable_tech_but = customtkinter.CTkButton(self.frame_1, text="Enable Tech Mode",
+                                                       command=lambda: [self.enable_user_mode(), self.enable_buttons()],
+                                                       fg_color="green")
+        self.enable_tech_but.grid(row=7, column=1, columnspan=1, padx=10, pady=20)
 
         self.frame_1.grid(padx=40, pady=50, row=0, column=0)
 
@@ -184,28 +191,41 @@ class RootWindow:
 
     # Data recording/Enable tech functions
 
-    def enable_tech_mode(self):
+    def enable_user_mode(self):
         # self.arduino_data.send_data("Tech Mode arduino string here**")
         # self.arduino_data.tech_mode = True
-        print("Tech mode enabled")
+        self.arduino_data.enter_user_mode()
+        print("User mode enabled")
 
     def enable_buttons(self):
-        self.open_exo_but['state'] = NORMAL
-        self.close_exo_but["state"] = NORMAL
-        self.close_left_but["state"] = NORMAL
-        self.far_left_but["state"] = NORMAL
-        self.close_right_but["state"] = NORMAL
-        self.far_right_but["state"] = NORMAL
-        self.center_but["state"] = NORMAL
-        self.calibrate_but["state"] = NORMAL
-        self.run_trial_but["state"] = NORMAL
-        self.stop_but["state"] = NORMAL
-        self.open_glove_but["state"] = NORMAL
-        self.close_glove_but["state"] = NORMAL
-        self.open_hand_but["state"] = NORMAL
-        self.close_hand_but["state"] = NORMAL
-        self.run_glove_trial["state"] = NORMAL
-        self.stop_glove["state"] = NORMAL
+        print('Buttons Enabled')
+        self.open_exo_but.configure(state='normal')
+        self.close_exo_but.configure(state='normal')
+        self.close_left_but.configure(state='normal')
+        self.far_left_but.configure(state='normal')
+        self.close_right_but.configure(state='normal')
+        self.far_right_but.configure(state='normal')
+        self.center_but.configure(state='normal')
+        self.calibrate_but.configure(state='normal')
+        self.run_trial_but.configure(state='normal')
+        self.stop_but.configure(state='normal')
+
+    def enable_tech_mode(self):
+        self.arduino_data.enter_tech_mode()
+        print("Tech mode enabled")
+
+    def disable_buttons(self):
+        print('Buttons Disabled')
+        self.open_exo_but.configure(state='disabled')
+        self.close_exo_but.configure(state='disabled')
+        self.close_left_but.configure(state='disabled')
+        self.far_left_but.configure(state='disabled')
+        self.close_right_but.configure(state='disabled')
+        self.far_right_but.configure(state='disabled')
+        self.center_but.configure(state='disabled')
+        self.calibrate_but.configure(state='disabled')
+        self.run_trial_but.configure(state='disabled')
+        self.stop_but.configure(state='disabled')
 
     def open_active_window(self):
         self.sub_window3 = ActiveControlGUI()
