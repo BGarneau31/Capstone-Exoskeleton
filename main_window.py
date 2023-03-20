@@ -64,7 +64,8 @@ class RootWindow:
         speed_slider.grid(row=6, column=0, columnspan=2, padx=10, pady=20)
 
         self.enable_user_but = customtkinter.CTkButton(self.frame_1, text="Enable User Mode",
-                                                       command=lambda: [self.enable_user_mode(), self.disable_buttons()],
+                                                       command=lambda: [self.enable_user_mode(),
+                                                                        self.disable_buttons()],
                                                        fg_color="green")
 
         self.enable_user_but.grid(row=7, column=0, columnspan=1, padx=10, pady=20)
@@ -176,14 +177,12 @@ class RootWindow:
         self.active_left_but.grid(row=2, column=1, columnspan=1, padx=5, pady=10)
 
         self.active_right_but = customtkinter.CTkButton(self.frame_4, text="Right",
-                                                       command=self.active_right)
+                                                        command=self.active_right)
         self.active_right_but.grid(row=2, column=2, columnspan=1, padx=5, pady=10)
 
         self.active_stop_but = customtkinter.CTkButton(self.frame_4, text="Stop",
                                                        command=self.active_stop, fg_color="red")
         self.active_stop_but.grid(row=3, column=1, columnspan=2, padx=5, pady=10)
-
-
 
         self.frame_4.grid(padx=20, pady=50, row=0, column=2)
 
@@ -425,7 +424,6 @@ class RootWindow:
 
         # self.position = self.arduino_data.receive_data()
         # print(self.position)
-
 
     def go_far_left(self):
         tic = time.perf_counter()
