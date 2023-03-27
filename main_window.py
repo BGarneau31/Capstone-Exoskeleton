@@ -19,12 +19,6 @@ now = time.ctime()
 print("Current Time:", now)
 
 
-# open passive control: its controls underneath it
-# open active (push button) control -- add planar control together, if active then the arduino will do work and python will just print it
-# open glove GUI/ controls under it
-# open both glove and active control GUI??
-# if specific GUI open then buttons/controls/functions able to work
-
 
 class RootWindow:
 
@@ -491,7 +485,7 @@ class RootWindow:
 
 if __name__ == "__main__":
     root = CTk()
-    root.geometry("%dx%d+%d+%d" % (1520, 540, 300, 300))
+    root.geometry("%dx%d+%d+%d" % (1520, 540, 0, 50))
     root.title("Exoskeleton Technician Controls")
     main_window = RootWindow(root)
     root.mainloop()
